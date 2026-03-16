@@ -1,0 +1,250 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Dropdown tipo árbol para filtrar por Title",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "padding": 0,
+  "background": null,
+
+  "signals": [
+    { "name": "headerHeight", "value": 44 },
+    { "name": "rowHeight", "value": 34 },
+    { "name": "leftPad", "value": 18 },
+    { "name": "iconX", "value": 14 },
+    {
+      "name": "isOpen",
+      "value": true,
+      "on": [
+        {
+          "events": "@headerHit:click",
+          "update": "!isOpen"
+        }
+      ]
+    }
+  ],
+
+  "data": [
+    {
+      "name": "dataset"
+    },
+    {
+      "name": "items",
+      "source": "dataset",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum.Title) && datum.Title != ''"
+        },
+        {
+          "type": "collect",
+          "sort": {
+            "field": "Title",
+            "order": "ascending"
+          }
+        },
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["rownum"]
+        },
+        {
+          "type": "formula",
+          "as": "yPos",
+          "expr": "headerHeight + (datum.rownum - 1) * rowHeight"
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "name": "headerBg",
+      "type": "rect",
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 0 },
+          "width": { "signal": "width" },
+          "height": { "signal": "headerHeight" },
+          "fill": { "value": "#2E6F80" },
+          "fillOpacity": { "value": 0.55 },
+          "stroke": { "value": "#6FD7FF" },
+          "strokeOpacity": { "value": 0.18 },
+          "strokeWidth": { "value": 1 },
+          "cornerRadius": { "value": 4 }
+        }
+      }
+    },
+    {
+      "name": "headerHit",
+      "type": "rect",
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 0 },
+          "width": { "signal": "width" },
+          "height": { "signal": "headerHeight" },
+          "fill": { "value": "transparent" },
+          "cursor": { "value": "pointer" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "signal": "iconX" },
+          "y": { "signal": "headerHeight / 2 + 1" },
+          "text": { "signal": "isOpen ? '⌄' : '›'" },
+          "fontSize": { "value": 18 },
+          "fill": { "value": "#E7F7FF" },
+          "baseline": { "value": "middle" },
+          "align": { "value": "left" },
+          "interactive": { "value": false }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 32 },
+          "y": { "signal": "headerHeight / 2 + 1" },
+          "text": { "value": "LINKUP" },
+          "fontSize": { "value": 14 },
+          "fontWeight": { "value": "bold" },
+          "fill": { "value": "#F0FAFF" },
+          "baseline": { "value": "middle" },
+          "align": { "value": "left" },
+          "interactive": { "value": false }
+        }
+      }
+    },
+
+    {
+      "type": "group",
+      "encode": {
+        "update": {
+          "opacity": { "signal": "isOpen ? 1 : 0" }
+        }
+      },
+      "marks": [
+        {
+          "name": "optionRow",
+          "type": "rect",
+          "from": { "data": "items" },
+          "encode": {
+            "enter": {
+              "x": { "value": 10 },
+              "y": { "field": "yPos" },
+              "width": { "signal": "width - 10" },
+              "height": { "signal": "rowHeight - 2" },
+              "cornerRadius": { "value": 10 },
+              "cursor": { "value": "pointer" },
+              "strokeWidth": { "value": 0 }
+            },
+            "update": {
+              "fill": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": "#2C5F82"
+                },
+                { "value": "transparent" }
+              ],
+              "stroke": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": "#6FD7FF"
+                },
+                { "value": "transparent" }
+              ],
+              "fillOpacity": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": 0.5
+                },
+                { "value": 1 }
+              ]
+            },
+            "hover": {
+              "fill": { "value": "#2C5F82" },
+              "fillOpacity": { "value": 0.28 }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "from": { "data": "items" },
+          "encode": {
+            "enter": {
+              "x": { "value": 19 },
+              "x2": { "value": 19 },
+              "y": { "field": "yPos" },
+              "y2": { "signal": "datum.yPos + rowHeight - 2" },
+              "stroke": { "value": "#5EC8FF" },
+              "strokeOpacity": { "value": 0.35 },
+              "strokeWidth": { "value": 1 }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": { "data": "items" },
+          "encode": {
+            "enter": {
+              "x": { "value": 42 },
+              "y": { "signal": "datum.yPos + rowHeight / 2 - 1" },
+              "size": { "value": 90 },
+              "shape": { "value": "square" },
+              "fill": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": "#8BE7FF"
+                },
+                { "value": "#7AA9C6" }
+              ],
+              "fillOpacity": { "value": 0.22 },
+              "stroke": { "value": "#66D6FF" },
+              "strokeOpacity": { "value": 0.35 },
+              "strokeWidth": { "value": 1.4 }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": { "data": "items" },
+          "encode": {
+            "enter": {
+              "x": { "value": 58 },
+              "y": { "signal": "datum.yPos + rowHeight / 2 - 1" },
+              "text": { "field": "Title" },
+              "fontSize": { "value": 12.5 },
+              "baseline": { "value": "middle" },
+              "align": { "value": "left" },
+              "interactive": { "value": false }
+            },
+            "update": {
+              "fill": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": "#B7F1FF"
+                },
+                { "value": "#D6E4F2" }
+              ],
+              "fontWeight": [
+                {
+                  "test": "datum.__selected__ === 'on'",
+                  "value": "bold"
+                },
+                { "value": "normal" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -11,15 +11,16 @@ VAR DocsUnicos =
         Documentos_Url[Path]
     )
 
-VAR TotalDocs =
-    COUNTROWS ( DocsUnicos )
-
 VAR DocsOrdenados =
-    SORTBYCOLUMNS (
+    TOPN (
+        100000,
         DocsUnicos,
         [Date modified], DESC,
         [Name], ASC
     )
+
+VAR TotalDocs =
+    COUNTROWS ( DocsOrdenados )
 
 VAR FilasHtml =
     CONCATENATEX (
@@ -44,28 +45,126 @@ VAR FilasHtml =
 VAR HtmlStyles =
     "<style>" &
         "*{box-sizing:border-box;}" &
-        ".docs-wrap{width:100%;height:100%;font-family:Segoe UI, Arial, sans-serif;border-radius:12px;overflow:hidden;color:#4f5870;box-shadow:0 8px 22px rgba(0,0,0,.08);background:linear-gradient(180deg, rgba(255,255,255,.45), rgba(236,233,246,.55));display:flex;flex-direction:column;}" &
-        ".docs-wrap.empty-state{height:100%;padding:24px;color:#556077;background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(235,232,246,.55));}" &
-        ".empty{width:100%;min-height:320px;display:flex;align-items:center;justify-content:center;font-size:16px;}" &
-        ".docs-header{display:grid;grid-template-columns:70px 1.4fr 180px 180px;align-items:center;min-height:44px;padding:0 14px;font-size:13px;color:#6b748a;background:rgba(255,255,255,.28);border-bottom:1px solid rgba(120,120,140,.12);font-weight:600;flex:0 0 auto;}" &
-        ".docs-body{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:100%;}" &
-        ".doc-row{display:grid;grid-template-columns:70px 1.4fr 180px 180px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(120,120,140,.10);background:rgba(255,255,255,.14);column-gap:12px;}" &
+
+        ".docs-wrap{" &
+            "width:100%;height:100%;" &
+            "font-family:Segoe UI, Arial, sans-serif;" &
+            "border-radius:12px;overflow:hidden;" &
+            "color:#4f5870;" &
+            "box-shadow:0 8px 22px rgba(0,0,0,.08);" &
+            "background:linear-gradient(180deg, rgba(255,255,255,.45), rgba(236,233,246,.55));" &
+            "display:flex;flex-direction:column;" &
+        "}" &
+
+        ".docs-header{" &
+            "display:grid;" &
+            "grid-template-columns:70px 1.4fr 180px 180px;" &
+            "align-items:center;" &
+            "min-height:44px;" &
+            "padding:0 14px;" &
+            "font-size:13px;" &
+            "color:#6b748a;" &
+            "background:rgba(255,255,255,.28);" &
+            "border-bottom:1px solid rgba(120,120,140,.12);" &
+            "font-weight:600;" &
+        "}" &
+
+        ".docs-body{" &
+            "flex:1 1 auto;" &
+            "overflow-y:auto;" &
+            "overflow-x:hidden;" &
+        "}" &
+
+        ".doc-row{" &
+            "display:grid;" &
+            "grid-template-columns:70px 1.4fr 180px 180px;" &
+            "align-items:flex-start;" &
+            "padding:10px 14px;" &
+            "border-bottom:1px solid rgba(120,120,140,.10);" &
+            "background:rgba(255,255,255,.14);" &
+            "column-gap:12px;" &
+        "}" &
+
         ".doc-row:nth-child(even){background:rgba(255,255,255,.24);}" &
-        ".doc-id{color:#6d7690;font-size:13px;font-weight:600;align-self:start;padding-top:4px;}" &
-        ".doc-name{display:flex;align-items:flex-start;gap:10px;min-width:0;color:#3f4961;font-size:14px;font-weight:500;}" &
-        ".doc-text{white-space:normal;word-break:break-word;line-height:1.35;display:block;}" &
-        ".doc-icon{font-size:18px;flex:0 0 auto;padding-top:2px;}" &
-        ".doc-date{color:#6d7690;font-size:14px;align-self:start;padding-top:4px;}" &
-        ".doc-action{display:flex;justify-content:flex-end;align-items:flex-start;gap:8px;padding-top:2px;}" &
-        ".doc-icon-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;text-decoration:none;color:white;font-weight:700;font-size:16px;background:linear-gradient(180deg,#5da2ea,#3d7fca);box-shadow:0 3px 8px rgba(61,127,202,.28);flex:0 0 auto;}" &
-        ".doc-validate-btn{display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:36px;padding:0 14px;border-radius:6px;text-decoration:none;color:white;font-weight:600;font-size:13px;background:linear-gradient(180deg,#8F3B6E,#6F2A55);box-shadow:0 3px 8px rgba(111,42,85,.28);flex:0 0 auto;}" &
-        ".doc-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;padding:0 14px;font-size:13px;color:#68728b;background:rgba(255,255,255,.20);flex:0 0 auto;border-top:1px solid rgba(120,120,140,.10);}" &
+
+        ".doc-id{" &
+            "color:#6d7690;" &
+            "font-size:13px;" &
+            "font-weight:600;" &
+        "}" &
+
+        ".doc-name{" &
+            "display:flex;" &
+            "align-items:flex-start;" &
+            "gap:10px;" &
+            "min-width:0;" &
+            "color:#3f4961;" &
+            "font-size:14px;" &
+            "font-weight:500;" &
+        "}" &
+
+        ".doc-text{" &
+            "white-space:normal;" &
+            "word-break:break-word;" &
+            "line-height:1.35;" &
+        "}" &
+
+        ".doc-icon{font-size:18px;}" &
+
+        ".doc-date{" &
+            "color:#6d7690;" &
+            "font-size:14px;" &
+        "}" &
+
+        ".doc-action{" &
+            "display:flex;" &
+            "justify-content:flex-end;" &
+            "gap:8px;" &
+        "}" &
+
+        ".doc-icon-btn{" &
+            "display:flex;" &
+            "align-items:center;" &
+            "justify-content:center;" &
+            "width:36px;height:36px;" &
+            "border-radius:6px;" &
+            "text-decoration:none;" &
+            "color:white;" &
+            "font-size:16px;" &
+            "background:linear-gradient(180deg,#5da2ea,#3d7fca);" &
+        "}" &
+
+        ".doc-validate-btn{" &
+            "display:flex;" &
+            "align-items:center;" &
+            "justify-content:center;" &
+            "min-width:92px;height:36px;" &
+            "padding:0 14px;" &
+            "border-radius:6px;" &
+            "text-decoration:none;" &
+            "color:white;" &
+            "font-weight:600;" &
+            "font-size:13px;" &
+            "background:linear-gradient(180deg,#8F3B6E,#6F2A55);" &
+        "}" &
+
+        ".doc-footer{" &
+            "display:flex;" &
+            "justify-content:space-between;" &
+            "align-items:center;" &
+            "min-height:44px;" &
+            "padding:0 14px;" &
+            "font-size:13px;" &
+            "color:#68728b;" &
+            "background:rgba(255,255,255,.20);" &
+        "}" &
+
     "</style>"
 
 VAR HtmlEmpty =
-    "<div class='docs-wrap empty-state'>" &
+    "<div class='docs-wrap'>" &
         HtmlStyles &
-        "<div class='empty'>No hay documentos para los filtros seleccionados</div>" &
+        "<div class='doc-footer'>No hay documentos para los filtros seleccionados</div>" &
     "</div>"
 
 VAR HtmlFull =
@@ -82,7 +181,7 @@ VAR HtmlFull =
         "</div>" &
         "<div class='doc-footer'>" &
             "<div>Total de documentos: " & TotalDocs & "</div>" &
-            "<div>Desplazate para ver el listado completo</div>" &
+            "<div>Scroll para navegar</div>" &
         "</div>" &
     "</div>"
 

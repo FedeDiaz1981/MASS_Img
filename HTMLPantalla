@@ -1,27 +1,53 @@
-Tabla Documentos HTML = 
-VAR DocsFiltrados =
-    FILTER (
-        Documentos_Url,
-        NOT ISBLANK ( Documentos_Url[Name] ) 
-        
+Tabla Documentos HTML =
+VAR DocsUnicos =
+    SUMMARIZE (
+        FILTER (
+            Documentos_Url,
+            NOT ISBLANK ( Documentos_Url[Name] )
+        ),
+        Documentos_Url[ID],
+        Documentos_Url[Name],
+        Documentos_Url[Date modified],
+        Documentos_Url[Path]
     )
 
 VAR TotalDocs =
-    COUNTROWS ( DocsFiltrados )
+    COUNTROWS ( DocsUnicos )
 
 VAR DocsTop =
     TOPN (
         10,
-        DocsFiltrados,
-        Documentos_Url[Date modified], DESC,
-        Documentos_Url[Name], ASC
+        DocsUnicos,
+        [Date modified], DESC,
+        [Name], ASC
+    )
+
+VAR LinkupSel =
+    CONCATENATEX (
+        VALUES ( Linkup[Title] ),
+        Linkup[Title],
+        ", "
+    )
+
+VAR TareaSel =
+    CONCATENATEX (
+        VALUES ( Tarea[Title] ),
+        Tarea[Title],
+        ", "
+    )
+
+VAR PerdidaSel =
+    CONCATENATEX (
+        VALUES ( Perdida[Title] ),
+        Perdida[Title],
+        ", "
     )
 
 VAR NombreCategoria =
     COALESCE (
-        SELECTEDVALUE ( Documentos_Url[Attributes.LINKUP.Value] ),
-        SELECTEDVALUE ( Documentos_Url[Attributes.Tarea.Value] ),
-        SELECTEDVALUE ( Documentos_Url[Attributes.Perdidas.Value] ),
+        LinkupSel,
+        TareaSel,
+        PerdidaSel,
         "Documentos"
     )
 
@@ -32,13 +58,13 @@ VAR FilasHtml =
             "<div class='doc-check'>□</div>" &
             "<div class='doc-name'>" &
                 "<span class='doc-icon'>📄</span>" &
-                "<span class='doc-text'>" & Documentos_Url[Name] & "</span>" &
+                "<span class='doc-text'>" & [Name] & "</span>" &
             "</div>" &
             "<div class='doc-date'>" &
-                FORMAT ( Documentos_Url[Date modified], "dd/mm/yyyy HH:mm" ) &
+                FORMAT ( [Date modified], "dd/MM/yyyy HH:mm" ) &
             "</div>" &
             "<div class='doc-action'>" &
-                "<a class='doc-btn' href='#' target='_blank'>⬇ Descargar PDF&nbsp;&nbsp;›</a>" &
+                "<a class='doc-btn' href='" & [Path] & "' target='_blank'>⬇ Descargar PDF&nbsp;&nbsp;›</a>" &
             "</div>" &
         "</div>",
         ""
@@ -77,7 +103,7 @@ VAR HtmlFull =
         HtmlStyles &
         "<div class='docs-header'>" &
             "<div>□</div>" &
-            "<div>" & NombreCategoria & " ↓ " & TotalDocs & "</div>" &
+            "<div>" & NombreCategoria & " · " & TotalDocs & "</div>" &
             "<div>Última modificación</div>" &
             "<div></div>" &
         "</div>" &
@@ -94,8 +120,4 @@ VAR HtmlFull =
     "</div>"
 
 RETURN
-    IF (
-        TotalDocs = 0,
-        HtmlEmpty,
-        HtmlFull
-    )
+    IF ( TotalDocs = 0, HtmlEmpty, HtmlFull )

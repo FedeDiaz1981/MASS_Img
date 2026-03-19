@@ -1,0 +1,113 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+
+  "background": null,
+
+  "data": [
+    {
+      "name": "dataset"
+    }
+  ],
+
+  "signals": [
+    {
+      "name": "selected",
+      "value": null,
+      "on": [
+        {
+          "events": "symbol:click, text:click",
+          "update": "datum['conjunto.lookupId']"
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+
+    // 🔵 Punto en la máquina
+    {
+      "type": "symbol",
+      "from": { "data": "dataset" },
+      "encode": {
+        "enter": {
+          "x": { "field": "pointx" },
+          "y": { "field": "pointy" },
+          "size": { "value": 80 },
+          "fill": { "value": "#6FD7FF" },
+          "stroke": { "value": "white" },
+          "strokeWidth": { "value": 1 }
+        }
+      }
+    },
+
+    // 🔵 Línea hacia label
+    {
+      "type": "rule",
+      "from": { "data": "dataset" },
+      "encode": {
+        "enter": {
+          "x": { "field": "pointx" },
+          "y": { "field": "pointy" },
+          "x2": { "field": "labelx" },
+          "y2": { "field": "labely" },
+          "stroke": { "value": "#6FD7FF" },
+          "strokeWidth": { "value": 2 }
+        }
+      }
+    },
+
+    // 🔵 Label background
+    {
+      "type": "rect",
+      "from": { "data": "dataset" },
+      "encode": {
+        "enter": {
+          "x": { "field": "labelx", "offset": -50 },
+          "y": { "field": "labely", "offset": -12 },
+          "width": { "value": 100 },
+          "height": { "value": 26 },
+          "cornerRadius": { "value": 10 },
+          "cursor": { "value": "pointer" }
+        },
+        "update": {
+          "fill": [
+            {
+              "test": "datum['conjunto.lookupId'] === selected",
+              "value": "#5da2ea"
+            },
+            { "value": "#2E6F80" }
+          ]
+        },
+        "hover": {
+          "fill": { "value": "#4FC3F7" }
+        }
+      }
+    },
+
+    // 🔵 Texto del label
+    {
+      "type": "text",
+      "from": { "data": "dataset" },
+      "encode": {
+        "enter": {
+          "x": { "field": "labelx" },
+          "y": { "field": "labely" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "fill": { "value": "white" },
+          "fontSize": { "value": 12 },
+          "fontWeight": { "value": "bold" },
+          "cursor": { "value": "pointer" }
+        },
+        "update": {
+          "text": { "field": "Boton" }
+        }
+      }
+    }
+  ]
+}

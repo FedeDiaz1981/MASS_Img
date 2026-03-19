@@ -1,4 +1,4 @@
-Tabla Documentos HTML =
+Tabla Documentos HTML = 
 VAR DocsUnicos =
     SUMMARIZE (
         FILTER (
@@ -8,7 +8,7 @@ VAR DocsUnicos =
         Documentos_Url[ID],
         Documentos_Url[Name],
         Documentos_Url[Date modified],
-        Documentos_Url[Path]
+        Documentos_Url[Folder Path]
     )
 
 VAR DocsOrdenados =
@@ -35,7 +35,7 @@ VAR FilasHtml =
                 FORMAT ( [Date modified], "dd/MM/yyyy HH:mm" ) &
             "</div>" &
             "<div class='doc-action'>" &
-                "<a class='doc-icon-btn' href='" & [Path] & "' target='_blank' title='Descargar'>⬇</a>" &
+                "<a class='doc-icon-btn' href='#' target='_blank' title='Descargar'>⬇</a>" &
                 "<a class='doc-validate-btn' href='#' target='_blank'>Validar</a>" &
             "</div>" &
         "</div>",

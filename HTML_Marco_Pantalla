@@ -1,41 +1,33 @@
 Pantalla HTML = 
-VAR MostrarTabla = [Mostrar Tabla] 
--- 0 = mostrar mapa/imagen
--- 1 = mostrar overlay con tabla
+
+VAR Estado = [Estado Pantalla]
 
 VAR BreadcrumbTxt =
-    "Inicio > Departamento > Secundario > MAKER > VE"
-
-VAR ImagenMaquina =
-    SELECTEDVALUE ( Maquina[UrlImagen] )
-    -- reemplazar por tu campo/medida real
+    "Inicio > Departamento > Equipo > Máquina"
 
 VAR TotalRelacionados =
     [Total Documentos Relacionados]
-    -- reemplazar por tu medida real
 
 VAR DocsRelacionadosHtml =
     [HTML Documentacion Relacionada]
-    -- reemplazar por tu medida html del panel derecho
 
 VAR TablaResultadosHtml =
     [Tabla Documentos HTML]
-    -- tu medida actual de tabla
 
-VAR BotonVolverHtml =
-    "<div class='back-btn'>" &
-        "<span class='back-icon'>←</span>" &
-        "<span>Volver al mapa</span>" &
-    "</div>"
-
-VAR MapaHtml =
+/* OVERLAY SOLO SI ESTADO = 2 */
+VAR OverlayHtml =
     IF (
-        NOT ISBLANK ( ImagenMaquina ),
-        "<div class='machine-stage'>" &
-            "<img class='machine-image' src='" & ImagenMaquina & "' />" &
-            "<div class='machine-overlay-hint'>Seleccioná una zona del mapa para ver resultados</div>" &
+        Estado = 2,
+        "<div class='overlay'>" &
+            "<div class='overlay-header'>" &
+                "<div class='overlay-title'>Resultados</div>" &
+                "<div class='overlay-hint'>Usá el botón volver para regresar al mapa</div>" &
+            "</div>" &
+            "<div class='overlay-body'>" &
+                TablaResultadosHtml &
+            "</div>" &
         "</div>",
-        "<div class='machine-empty'>No hay imagen de máquina disponible</div>"
+        ""
     )
 
 VAR HtmlStyles =
@@ -47,331 +39,150 @@ html,body{
     padding:0;
     width:100%;
     height:100%;
-    font-family:'Segoe UI',Arial,sans-serif;
+    font-family:Segoe UI, Arial;
 }
+
+/* LAYOUT */
 .screen{
     width:100%;
     height:100%;
     display:grid;
-    grid-template-rows:92px 1fr;
-    background:
-        linear-gradient(180deg,#0f4d86 0%, #1e5f99 18%, #cfd8e6 100%);
-    color:#24364a;
+    grid-template-rows:90px 1fr;
+    background:linear-gradient(180deg,#0f4d86,#1f5f99 30%,#dbe3ef);
     overflow:hidden;
 }
 
 /* HEADER */
-.topbar{
-    display:grid;
-    grid-template-rows:34px 1fr;
+.header{
+    display:flex;
+    flex-direction:column;
+    padding:12px 16px;
     gap:8px;
-    padding:14px 18px 10px 18px;
-    border-bottom:1px solid rgba(255,255,255,.18);
 }
-.topbar-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    min-width:0;
-}
-.brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    color:#fff;
-    font-weight:700;
-    font-size:14px;
-    letter-spacing:.2px;
-}
-.brand-badge{
-    width:26px;
-    height:26px;
-    border-radius:8px;
-    background:linear-gradient(180deg,#7fd0ff,#3f89d4);
-    box-shadow:0 8px 20px rgba(20,70,130,.30);
-}
+
 .breadcrumb{
-    color:rgba(255,255,255,.92);
+    color:white;
     font-size:13px;
     font-weight:600;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    margin-left:18px;
 }
-.filter-slots{
+
+.filters{
     display:grid;
-    grid-template-columns:repeat(4, minmax(0,1fr));
-    gap:12px;
-    min-height:0;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
 }
+
 .filter-slot{
-    height:100%;
-    min-height:44px;
-    border-radius:14px;
-    background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.18);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+    height:44px;
+    border-radius:12px;
+    background:rgba(255,255,255,.15);
     display:flex;
     align-items:center;
-    padding:0 14px;
-    color:rgba(255,255,255,.90);
+    padding-left:10px;
+    color:white;
+    font-weight:600;
     font-size:13px;
-    font-weight:700;
-}
-.filter-slot span{
-    opacity:.92;
 }
 
 /* MAIN */
 .main{
-    min-height:0;
     display:grid;
-    grid-template-columns:minmax(0,4fr) 280px;
-    gap:14px;
-    padding:14px 18px 18px 18px;
-}
-.canvas-panel{
+    grid-template-columns:1fr 280px;
+    gap:12px;
+    padding:12px;
     min-height:0;
-    position:relative;
-    border-radius:22px;
-    overflow:hidden;
-    background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
-    border:1px solid rgba(255,255,255,.24);
-    box-shadow:0 16px 36px rgba(18,45,82,.18);
-    backdrop-filter:blur(4px);
-}
-.machine-stage{
-    width:100%;
-    height:100%;
-    position:relative;
-    overflow:hidden;
-}
-.machine-image{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-.machine-overlay-hint{
-    position:absolute;
-    left:18px;
-    bottom:16px;
-    padding:10px 14px;
-    border-radius:12px;
-    background:rgba(15,33,60,.48);
-    color:#fff;
-    font-size:13px;
-    font-weight:600;
-    backdrop-filter:blur(5px);
-}
-.machine-empty{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-size:15px;
-    font-weight:700;
-    background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
 }
 
-/* OVERLAY RESULTADOS */
-.results-overlay{
+/* CANVAS */
+.canvas{
+    position:relative;
+    border-radius:16px;
+    overflow:hidden;
+    background:rgba(255,255,255,.15);
+}
+
+/* OVERLAY */
+.overlay{
     position:absolute;
     inset:0;
-    padding:18px;
     display:flex;
     flex-direction:column;
-    gap:14px;
-    background:linear-gradient(180deg, rgba(225,233,243,.72), rgba(213,223,236,.84));
-    backdrop-filter:blur(7px);
+    padding:16px;
+    background:rgba(240,245,252,.85);
+    backdrop-filter:blur(6px);
 }
-.back-btn{
-    align-self:flex-start;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    min-height:42px;
-    padding:0 18px;
-    border-radius:12px;
-    color:#fff;
-    font-size:14px;
+
+.overlay-header{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:10px;
+}
+
+.overlay-title{
+    font-size:16px;
     font-weight:700;
-    background:linear-gradient(180deg,#355a86,#24486f);
-    box-shadow:0 10px 24px rgba(33,70,115,.22);
+    color:#2f3f57;
 }
-.back-icon{
-    font-size:18px;
-    line-height:1;
+
+.overlay-hint{
+    font-size:12px;
+    color:#6b7a90;
 }
-.results-card{
-    flex:1 1 auto;
+
+.overlay-body{
+    flex:1;
     min-height:0;
-    border-radius:18px;
-    overflow:hidden;
-    background:rgba(255,255,255,.66);
-    border:1px solid rgba(255,255,255,.42);
-    box-shadow:0 12px 28px rgba(18,45,82,.10);
 }
 
 /* SIDEBAR */
 .sidebar{
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    padding:16px 14px;
-    border-radius:22px;
-    overflow:hidden;
-    background:linear-gradient(180deg, rgba(255,255,255,.74), rgba(246,249,253,.82));
-    border:1px solid rgba(255,255,255,.44);
-    box-shadow:0 16px 36px rgba(18,45,82,.14);
-}
-.sidebar-section{
     display:flex;
     flex-direction:column;
     gap:10px;
-    min-height:0;
-}
-.sidebar-title{
-    font-size:14px;
-    font-weight:800;
-    color:#506176;
-}
-.counter-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    min-height:56px;
-    padding:0 14px;
-    border-radius:14px;
-    background:linear-gradient(180deg,#edf2f8,#e5ebf4);
-    border:1px solid rgba(190,202,220,.45);
-}
-.counter-label{
-    font-size:13px;
-    color:#66778c;
-    font-weight:700;
-}
-.counter-value{
-    font-size:26px;
-    color:#284a72;
-    font-weight:800;
-}
-.related-wrap{
-    flex:1 1 auto;
-    min-height:0;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-}
-.related-list{
-    flex:1 1 auto;
-    min-height:0;
-    overflow:auto;
-    padding-right:2px;
-}
-.related-list::-webkit-scrollbar{width:7px;}
-.related-list::-webkit-scrollbar-thumb{
-    background:rgba(83,107,141,.25);
-    border-radius:8px;
-}
-.related-item{
-    display:grid;
-    grid-template-columns:1fr 28px;
-    align-items:center;
-    gap:10px;
-    min-height:42px;
-    margin-bottom:8px;
-    padding:0 12px;
-    border-radius:12px;
-    background:#fff;
-    border:1px solid rgba(217,225,236,.85);
-    color:#53657b;
-    font-size:13px;
-    font-weight:600;
-}
-.related-count{
-    text-align:right;
-    color:#2c4d73;
-    font-weight:800;
-}
-.sidebar-footer{
-    padding-top:6px;
-    font-size:13px;
-    color:#66778c;
-    font-weight:700;
+    padding:12px;
+    border-radius:16px;
+    background:white;
 }
 
-/* ayuda visual para ubicar slicers encima */
-.slot-note{
-    font-size:11px;
-    font-weight:600;
-    opacity:.82;
-    margin-left:auto;
+.counter{
+    font-size:26px;
+    font-weight:800;
+    color:#284a72;
+}
+
+.related{
+    flex:1;
+    overflow:auto;
 }
 </style>
 "
 
 VAR HtmlHeader =
-    "<div class='topbar'>" &
-        "<div class='topbar-row'>" &
-            "<div style='display:flex;align-items:center;min-width:0;'>" &
-                "<div class='brand'>" &
-                    "<div class='brand-badge'></div>" &
-                    "<div>TÉCNICO MANUFACTURA</div>" &
-                "</div>" &
-                "<div class='breadcrumb'>" & BreadcrumbTxt & "</div>" &
-            "</div>" &
-        "</div>" &
-        "<div class='filter-slots'>" &
-            "<div class='filter-slot'><span>LINKUP</span><span class='slot-note'>slicer nativo</span></div>" &
-            "<div class='filter-slot'><span>TAREAS</span><span class='slot-note'>slicer nativo</span></div>" &
-            "<div class='filter-slot'><span>PÉRDIDA</span><span class='slot-note'>slicer nativo</span></div>" &
-            "<div class='filter-slot'><span>TECNOLOGÍA</span><span class='slot-note'>slicer nativo</span></div>" &
+    "<div class='header'>" &
+        "<div class='breadcrumb'>" & BreadcrumbTxt & "</div>" &
+        "<div class='filters'>" &
+            "<div class='filter-slot'>LINKUP</div>" &
+            "<div class='filter-slot'>TAREAS</div>" &
+            "<div class='filter-slot'>PÉRDIDA</div>" &
+            "<div class='filter-slot'>TECNOLOGÍA</div>" &
         "</div>" &
     "</div>"
 
-VAR HtmlSidebar =
-    "<div class='sidebar'>" &
-        "<div class='sidebar-section'>" &
-            "<div class='sidebar-title'>Documentación relacionada</div>" &
-            "<div class='counter-card'>" &
-                "<div class='counter-label'>Total documentos</div>" &
-                "<div class='counter-value'>" & FORMAT ( TotalRelacionados, "#,0" ) & "</div>" &
-            "</div>" &
+VAR HtmlMain =
+    "<div class='main'>" &
+        "<div class='canvas'>" &
+            OverlayHtml &
         "</div>" &
-        "<div class='sidebar-section related-wrap'>" &
-            "<div class='related-list'>" &
-                DocsRelacionadosHtml &
-            "</div>" &
+        "<div class='sidebar'>" &
+            "<div><b>Documentación relacionada</b></div>" &
+            "<div class='counter'>" & TotalRelacionados & "</div>" &
+            "<div class='related'>" & DocsRelacionadosHtml & "</div>" &
         "</div>" &
-        "<div class='sidebar-footer'>Explorá la máquina o aplicá filtros múltiples arriba.</div>" &
-    "</div>"
-
-VAR HtmlCanvas =
-    "<div class='canvas-panel'>" &
-        MapaHtml &
-        IF (
-            MostrarTabla = 1,
-            "<div class='results-overlay'>" &
-                BotonVolverHtml &
-                "<div class='results-card'>" &
-                    TablaResultadosHtml &
-                "</div>" &
-            "</div>",
-            ""
-        ) &
     "</div>"
 
 RETURN
-    HtmlStyles &
-    "<div class='screen'>" &
-        HtmlHeader &
-        "<div class='main'>" &
-            HtmlCanvas &
-            HtmlSidebar &
-        "</div>" &
-    "</div>"
+HtmlStyles &
+"<div class='screen'>" &
+    HtmlHeader &
+    HtmlMain &
+"</div>"

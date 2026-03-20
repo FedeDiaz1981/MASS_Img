@@ -5,15 +5,10 @@ VAR Estado = [Estado Pantalla]
 VAR BreadcrumbTxt =
     "Inicio > Departamento > Equipo > Máquina"
 
-VAR TotalRelacionados =
-    [Total Documentos Relacionados]
-
-VAR DocsRelacionadosHtml =
-    [HTML Documentacion Relacionada]
-
 VAR TablaResultadosHtml =
     [Tabla Documentos HTML]
 
+/* OVERLAY SOLO SI ESTADO = 2 */
 VAR OverlayHtml =
     IF (
         Estado = 2,
@@ -46,118 +41,52 @@ html,body{
     width:100%;
     height:100%;
     display:grid;
-    grid-template-rows:60px 1fr;
-    background:linear-gradient(180deg,#0f4d86 0%, #1f5f99 30%, #dbe3ef 100%);
-    overflow:hidden;
+    grid-template-rows:78px 1fr;
+    background:linear-gradient(180deg,#0f4d86 0%, #1f5f99 100%);
 }
 
-/* HEADER (MÁS CHICO) */
+/* HEADER */
 .header{
     display:flex;
     flex-direction:column;
     justify-content:center;
-    padding:6px 12px;
-    gap:4px;
+    padding:10px 16px;
+    gap:6px;
 }
 
 .breadcrumb{
     color:#ffffff;
-    font-size:12px;
+    font-size:13px;
     font-weight:600;
 }
 
-.filters-band{
-    width:100%;
-    height:36px;
-    border-radius:12px;
-    background:rgba(255,255,255,.14);
+/* TITULOS (para slicers) */
+.filters{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    padding:4px 6px;
-}
-
-.filter-slot{
-    height:100%;
-    border-radius:8px;
-    background:rgba(255,255,255,.10);
-    display:flex;
-    align-items:center;
-    padding:0 8px;
-    color:#ffffff;
-    font-weight:600;
-    font-size:11px;
+    gap:20px;
+    color:white;
+    font-size:12px;
+    font-weight:700;
+    opacity:.9;
 }
 
 /* MAIN */
 .main{
     position:relative;
-    padding:10px;
+    background:#e9eef6;
+    padding:14px;
     height:100%;
 }
 
-/* CANVAS FULL */
+/* CANVAS */
 .canvas{
     position:absolute;
-    inset:0;
-    border-radius:16px;
+    inset:14px;
+    border-radius:18px;
     overflow:hidden;
-    background:rgba(255,255,255,.15);
-}
-
-/* SIDEBAR ARRIBA DERECHA */
-.sidebar{
-    position:absolute;
-    top:14px;
-    right:14px;
-    width:260px;
-    max-height:55%;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    padding:12px;
-    border-radius:16px;
-    background:rgba(255,255,255,.95);
-    border:1px solid rgba(220,228,238,.95);
-    box-shadow:0 10px 24px rgba(13,41,79,.12);
-    z-index:3;
-}
-
-.sidebar-title{
-    font-size:14px;
-    font-weight:700;
-    color:#31445c;
-}
-
-.counter-box{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 10px;
-    border-radius:10px;
-    background:#eef3f9;
-}
-
-.counter{
-    font-size:22px;
-    font-weight:800;
-    color:#284a72;
-}
-
-.related-frame{
-    flex:1;
-    min-height:0;
-    border-radius:12px;
-    background:#f8fbff;
-    padding:8px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-}
-
-.related{
-    flex:1;
-    overflow:auto;
+    background:rgba(255,255,255,.9);
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
 /* OVERLAY */
@@ -167,9 +96,28 @@ html,body{
     display:flex;
     flex-direction:column;
     padding:16px;
-    background:rgba(240,245,252,.88);
+    background:rgba(240,245,252,.92);
     backdrop-filter:blur(6px);
-    z-index:2;
+}
+
+.overlay-header{
+    margin-bottom:10px;
+}
+
+.overlay-title{
+    font-size:16px;
+    font-weight:700;
+    color:#2f3f57;
+}
+
+.overlay-hint{
+    font-size:12px;
+    color:#6b7a90;
+}
+
+.overlay-body{
+    flex:1;
+    min-height:0;
 }
 </style>
 "
@@ -177,11 +125,11 @@ html,body{
 VAR HtmlHeader =
     "<div class='header'>" &
         "<div class='breadcrumb'>" & BreadcrumbTxt & "</div>" &
-        "<div class='filters-band'>" &
-            "<div class='filter-slot'>LINKUP</div>" &
-            "<div class='filter-slot'>TAREAS</div>" &
-            "<div class='filter-slot'>PÉRDIDA</div>" &
-            "<div class='filter-slot'>TECNOLOGÍA</div>" &
+        "<div class='filters'>" &
+            "<div>LINKUP</div>" &
+            "<div>TAREAS</div>" &
+            "<div>PÉRDIDA</div>" &
+            "<div>TECNOLOGÍA</div>" &
         "</div>" &
     "</div>"
 
@@ -189,16 +137,6 @@ VAR HtmlMain =
     "<div class='main'>" &
         "<div class='canvas'>" &
             OverlayHtml &
-        "</div>" &
-        "<div class='sidebar'>" &
-            "<div class='sidebar-title'>Documentación relacionada</div>" &
-            "<div class='counter-box'>" &
-                "<div>Total</div>" &
-                "<div class='counter'>" & TotalRelacionados & "</div>" &
-            "</div>" &
-            "<div class='related-frame'>" &
-                "<div class='related'>" & DocsRelacionadosHtml & "</div>" &
-            "</div>" &
         "</div>" &
     "</div>"
 

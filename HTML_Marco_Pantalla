@@ -14,7 +14,6 @@ VAR DocsRelacionadosHtml =
 VAR TablaResultadosHtml =
     [Tabla Documentos HTML]
 
-/* OVERLAY SOLO SI ESTADO = 2 */
 VAR OverlayHtml =
     IF (
         Estado = 2,
@@ -39,7 +38,7 @@ html,body{
     padding:0;
     width:100%;
     height:100%;
-    font-family:Segoe UI, Arial;
+    font-family:Segoe UI, Arial, sans-serif;
 }
 
 /* LAYOUT */
@@ -47,8 +46,8 @@ html,body{
     width:100%;
     height:100%;
     display:grid;
-    grid-template-rows:90px 1fr;
-    background:linear-gradient(180deg,#0f4d86,#1f5f99 30%,#dbe3ef);
+    grid-template-rows:96px 1fr;
+    background:linear-gradient(180deg,#0f4d86 0%, #1f5f99 30%, #dbe3ef 100%);
     overflow:hidden;
 }
 
@@ -56,38 +55,50 @@ html,body{
 .header{
     display:flex;
     flex-direction:column;
-    padding:12px 16px;
+    justify-content:center;
+    padding:10px 14px 8px 14px;
     gap:8px;
 }
 
 .breadcrumb{
-    color:white;
+    color:#ffffff;
     font-size:13px;
     font-weight:600;
+    padding:0 4px;
 }
 
-.filters{
+.filters-band{
+    width:100%;
+    min-height:50px;
+    border-radius:14px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.10);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:10px;
+    gap:12px;
+    padding:8px 10px;
 }
 
 .filter-slot{
-    height:44px;
-    border-radius:12px;
-    background:rgba(255,255,255,.15);
+    height:100%;
+    min-height:34px;
+    border-radius:10px;
+    background:rgba(255,255,255,.10);
     display:flex;
     align-items:center;
-    padding-left:10px;
-    color:white;
-    font-weight:600;
-    font-size:13px;
+    padding:0 12px;
+    color:#ffffff;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.2px;
+    white-space:nowrap;
 }
 
 /* MAIN */
 .main{
     display:grid;
-    grid-template-columns:1fr 280px;
+    grid-template-columns:minmax(0,1fr) 290px;
     gap:12px;
     padding:12px;
     min-height:0;
@@ -96,9 +107,12 @@ html,body{
 /* CANVAS */
 .canvas{
     position:relative;
-    border-radius:16px;
+    border-radius:18px;
     overflow:hidden;
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 10px 24px rgba(13,41,79,.10);
+    min-height:0;
 }
 
 /* OVERLAY */
@@ -108,7 +122,7 @@ html,body{
     display:flex;
     flex-direction:column;
     padding:16px;
-    background:rgba(240,245,252,.85);
+    background:rgba(240,245,252,.88);
     backdrop-filter:blur(6px);
 }
 
@@ -138,21 +152,77 @@ html,body{
 .sidebar{
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
     padding:12px;
-    border-radius:16px;
-    background:white;
+    border-radius:18px;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(220,228,238,.95);
+    box-shadow:0 10px 24px rgba(13,41,79,.08);
+    min-height:0;
+}
+
+.sidebar-title{
+    font-size:15px;
+    font-weight:700;
+    color:#31445c;
+}
+
+.counter-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 12px;
+    border-radius:12px;
+    background:linear-gradient(180deg,#f4f7fb,#e9eef6);
+    border:1px solid #dde5f0;
+}
+
+.counter-label{
+    font-size:12px;
+    font-weight:600;
+    color:#6a7a8f;
 }
 
 .counter{
     font-size:26px;
     font-weight:800;
     color:#284a72;
+    line-height:1;
+}
+
+.related-frame{
+    flex:1;
+    min-height:0;
+    border-radius:14px;
+    border:1px solid #d9e2ee;
+    background:#f8fbff;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    overflow:hidden;
+}
+
+.related-title{
+    font-size:13px;
+    font-weight:700;
+    color:#51647d;
 }
 
 .related{
     flex:1;
+    min-height:0;
     overflow:auto;
+    padding-right:2px;
+}
+
+.related::-webkit-scrollbar{
+    width:7px;
+}
+
+.related::-webkit-scrollbar-thumb{
+    background:rgba(83,107,141,.25);
+    border-radius:8px;
 }
 </style>
 "
@@ -160,7 +230,7 @@ html,body{
 VAR HtmlHeader =
     "<div class='header'>" &
         "<div class='breadcrumb'>" & BreadcrumbTxt & "</div>" &
-        "<div class='filters'>" &
+        "<div class='filters-band'>" &
             "<div class='filter-slot'>LINKUP</div>" &
             "<div class='filter-slot'>TAREAS</div>" &
             "<div class='filter-slot'>PÉRDIDA</div>" &
@@ -174,15 +244,21 @@ VAR HtmlMain =
             OverlayHtml &
         "</div>" &
         "<div class='sidebar'>" &
-            "<div><b>Documentación relacionada</b></div>" &
-            "<div class='counter'>" & TotalRelacionados & "</div>" &
-            "<div class='related'>" & DocsRelacionadosHtml & "</div>" &
+            "<div class='sidebar-title'>Documentación relacionada</div>" &
+            "<div class='counter-box'>" &
+                "<div class='counter-label'>Total documentos</div>" &
+                "<div class='counter'>" & FORMAT ( TotalRelacionados, "#,0" ) & "</div>" &
+            "</div>" &
+            "<div class='related-frame'>" &
+                "<div class='related-title'>Listado</div>" &
+                "<div class='related'>" & DocsRelacionadosHtml & "</div>" &
+            "</div>" &
         "</div>" &
     "</div>"
 
 RETURN
-HtmlStyles &
-"<div class='screen'>" &
-    HtmlHeader &
-    HtmlMain &
-"</div>"
+    HtmlStyles &
+    "<div class='screen'>" &
+        HtmlHeader &
+        HtmlMain &
+    "</div>"

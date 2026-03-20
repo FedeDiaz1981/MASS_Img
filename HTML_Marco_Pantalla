@@ -1,0 +1,113 @@
+Pantalla Equipos HTML = 
+VAR ImagenUrl =
+    SELECTEDVALUE ( Mapas[Url] )
+
+VAR NombreMapa =
+    SELECTEDVALUE ( Mapas[Seccion], "Secciòn" )
+
+VAR NombreTecnologia =
+    SELECTEDVALUE ( Mapas[Tecnologia], "Tecnología" )
+
+VAR NombreDepartamento =
+    SELECTEDVALUE ( Mapas[Departamento], "Tecnología" )
+
+VAR NombreEquipo =
+    SELECTEDVALUE ( Mapas[Equipo], "Equipo" )
+
+VAR TecnologiasHtml =
+    CONCATENATEX (
+        FILTER (
+            ALL ( Mapas[Mapa] ),
+            NOT ISBLANK ( Mapas[Mapa] )
+        ),
+        "<div class='tech-item " &
+            IF ( Mapas[Mapa] = NombreMapa, "active", "" ) &
+        "'>📘 " & Mapas[Mapa] & " <span>›</span></div>",
+        "",
+        Mapas[Mapa], ASC
+    )
+
+VAR HtmlInicio =
+    "<div class='app'>" &
+    "<style>" &
+    "*{box-sizing:border-box;}" &
+    ".app{width:100%;height:100%;font-family:Segoe UI, Arial, sans-serif;background:linear-gradient(180deg,#33457a 0px,#213d61 74px,#1d456c 74px,#1d456c 100%);color:#fff;overflow:hidden;}" &
+    ".topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#d9e4ff;font-size:13px;border-bottom:1px solid rgba(120,170,255,.18);background:rgba(255,255,255,.04);}" &
+    ".brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.2px;}" &
+    ".brand-mark{width:34px;height:34px;background:linear-gradient(135deg,#8bd6ff,#3a7bd5);clip-path:polygon(0 0,100% 18%,55% 100%,15% 62%);border-radius:4px;box-shadow:0 0 20px rgba(93,190,255,.22);}" &
+    ".layout{display:grid;grid-template-columns:190px 1fr 260px;height:calc(100% - 74px);min-height:0;}" &
+    ".leftbar{background:linear-gradient(180deg,rgba(12,30,52,.45),rgba(14,34,58,.72));border-right:1px solid rgba(142,191,255,.10);padding:14px 10px;overflow:auto;}" &
+    ".search{height:38px;border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#c8d9f0;background:rgba(255,255,255,.05);border:1px solid rgba(150,200,255,.08);margin-bottom:14px;font-size:13px;}" &
+    ".side-title{background:#1d7285;color:#dffbff;font-size:12px;font-weight:700;border-radius:4px;padding:10px 12px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}" &
+    ".nav-item{color:#d7e4f7;padding:10px 12px;border-radius:6px;font-size:14px;margin-bottom:4px;background:transparent;}" &
+    ".nav-item.active{background:rgba(60,153,175,.30);border-left:3px solid #58d6ff;padding-left:9px;}" &
+    ".nav-sub{margin-left:14px;color:#b8d4ee;font-size:13px;padding:7px 10px;border-left:2px solid rgba(106,201,255,.25);margin-bottom:4px;}" &
+    ".main{padding:16px;min-width:0;overflow:hidden;}" &
+    ".crumbs{color:#d1def1;font-size:13px;margin-bottom:10px;opacity:.9;}" &
+    ".content-card{background:rgba(255,255,255,.82);border-radius:12px;overflow:hidden;height:calc(100% - 28px);min-height:560px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;grid-template-rows:56px 1fr;}" &
+    ".card-head{display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid rgba(36,58,88,.08);color:#41546d;font-weight:700;font-size:18px;background:rgba(255,255,255,.65);}" &
+    ".map-area{position:relative;min-height:0;padding:14px;background:linear-gradient(180deg,#eef3fb,#e3edf9);}" &
+    ".map-shell{position:relative;width:100%;height:100%;border-radius:8px;overflow:hidden;background:linear-gradient(180deg,#dce8f7,#cfdcf1);box-shadow:inset 0 0 0 1px rgba(88,123,170,.12);}" &
+    ".machine-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;z-index:1;}" &
+    ".overlay-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;}" &
+    ".hotspot{position:absolute;z-index:3;min-width:96px;height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:linear-gradient(180deg,#4f9bf3,#2f6ec8);border:2px solid rgba(143,223,255,.85);box-shadow:0 6px 16px rgba(0,0,0,.20);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;}" &
+    ".hotspot span{overflow:hidden;text-overflow:ellipsis;}" &
+    ".rightbar{padding:16px 14px 16px 0;}" &
+    ".right-card{height:100%;min-height:620px;background:rgba(255,255,255,.82);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px;color:#4a5b72;overflow:auto;}" &
+    ".section-title{font-weight:700;color:#596c84;margin:6px 0 10px 0;}" &
+    ".tech-item{display:flex;align-items:center;justify-content:space-between;min-height:38px;padding:0 12px;border-radius:8px;background:#f2f4f8;margin-bottom:8px;font-size:14px;color:#5a6d84;border:1px solid rgba(80,102,130,.08);}" &
+    ".tech-item.active{background:linear-gradient(180deg,#61a8ea,#4a8fd6);color:#fff;box-shadow:0 6px 14px rgba(67,127,201,.25);}" &
+    ".doc-item{display:grid;grid-template-columns:1fr 28px;align-items:center;min-height:34px;padding:0 10px;border-bottom:1px solid rgba(80,102,130,.10);color:#62758c;font-size:14px;}" &
+    ".doc-btn{margin-top:12px;height:36px;border-radius:8px;border:none;width:100%;background:linear-gradient(180deg,#5f84bb,#486eaa);color:#fff;font-weight:600;font-size:13px;}" &
+    "</style>"
+
+VAR HtmlHeader =
+    "<div class='topbar'>" &
+        "<div class='brand'>" &
+            "<div class='brand-mark'></div>" &
+            "<div>TÉCNICO<br/>MANUFACTURA</div>" &
+        "</div>" &
+        "<div>Departamento &gt; "& NombreDepartamento &" &gt; "& NombreEquipo &" &gt; " & NombreMapa & "</div>" &
+    "</div>"
+
+VAR HtmlLeft =
+    "<div class='leftbar'>" &
+    "</div>"
+
+VAR HtmlMain =
+    "<div class='main'>" &
+        "<div class='crumbs'>🏠 Inicio &gt; Departamento &gt; "& NombreDepartamento &" &gt; "& NombreEquipo &" &gt; " & NombreMapa & "</div>" &
+        "<div class='content-card'>" &
+            "<div class='card-head'>" &
+                "<div>" & NombreMapa & "</div>" &
+                
+            "</div>" &
+            "<div class='map-area'>" &
+                
+            "</div>" &
+        "</div>" &
+    "</div>"
+
+VAR HtmlRight =
+    "<div class='rightbar'>" &
+        "<div class='right-card'>" &
+            
+        "</div>" &
+    "</div>"
+
+VAR HtmlFinal =
+    HtmlInicio &
+    HtmlHeader &
+    "<div class='layout'>" &
+        HtmlLeft &
+        HtmlMain &
+        HtmlRight &
+    "</div>" &
+    "</div>"
+
+RETURN
+IF (
+    ISBLANK ( ImagenUrl ),
+    "<div style='padding:20px;font-family:Segoe UI'>Seleccioná un mapa</div>",
+    HtmlFinal
+)

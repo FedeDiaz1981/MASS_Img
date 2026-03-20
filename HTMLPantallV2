@@ -32,44 +32,55 @@ html,body{
     padding:0;
     width:100%;
     height:100%;
-    font-family:Segoe UI, Arial;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:transparent;
 }
 
 /* CONTENEDOR GENERAL */
 .screen{
+    position:relative;
     width:100%;
     height:100%;
     display:grid;
     grid-template-rows:70px 1fr;
-    background:linear-gradient(180deg,#1F3D7A,#2F5EB8 35%,#E6E6E6);
     overflow:hidden;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(76,123,232,0.22), transparent 32%),
+        radial-gradient(circle at 82% 78%, rgba(90,62,166,0.18), transparent 36%),
+        radial-gradient(circle at 50% 100%, rgba(143,59,110,0.10), transparent 40%),
+        linear-gradient(180deg,#1F3D7A 0%, #2F5EB8 36%, #4C7BE8 62%, #E6E6E6 100%);
 }
+
 .screen::after{
     content:'';
     position:absolute;
     inset:0;
     background:
-        linear-gradient(120deg, rgba(255,255,255,0.04) 25%, transparent 25%) ,
-        linear-gradient(240deg, rgba(255,255,255,0.03) 25%, transparent 25%);
+        linear-gradient(120deg, rgba(255,255,255,0.025) 25%, transparent 25%),
+        linear-gradient(240deg, rgba(255,255,255,0.02) 25%, transparent 25%);
     pointer-events:none;
+    z-index:0;
 }
 
 /* HEADER */
 .header{
+    position:relative;
+    z-index:1;
     display:flex;
     flex-direction:column;
     justify-content:center;
     padding:8px 16px;
     gap:6px;
+    background:linear-gradient(180deg, rgba(31,61,122,0.94), rgba(47,94,184,0.88));
+    border-bottom:1px solid rgba(255,255,255,.10);
 }
 
 .breadcrumb{
-    color:white;
+    color:#FFFFFF;
     font-size:13px;
     font-weight:600;
 }
 
-/* FILTROS */
 .filters{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -82,28 +93,34 @@ html,body{
     display:flex;
     align-items:center;
     padding-left:10px;
-    color:white;
+    color:#FFFFFF;
     font-weight:600;
     font-size:12px;
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.08);
 }
 
 /* BODY FULL */
 .main{
+    position:relative;
+    z-index:1;
     width:100%;
     height:100%;
     padding:12px;
+    background:transparent;
 }
 
-/* CANVAS FULL WIDTH */
+/* CANVAS */
 .canvas{
     width:100%;
     height:100%;
     position:relative;
     border-radius:18px;
     overflow:hidden;
-    background:linear-gradient(180deg,#EEF3F9,#E4EBF4,#DCE4EE);
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    background:linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.16));
+    border:1px solid rgba(255,255,255,.24);
+    box-shadow:0 10px 30px rgba(0,0,0,.10);
+    backdrop-filter:blur(3px);
 }
 
 /* EFECTO SUAVE */
@@ -112,8 +129,8 @@ html,body{
     position:absolute;
     inset:0;
     background:
-        radial-gradient(circle at top left, rgba(76,123,232,.15), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(90,62,166,.10), transparent 30%);
+        radial-gradient(circle at top left, rgba(76,123,232,.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(90,62,166,.08), transparent 30%);
     pointer-events:none;
 }
 
@@ -124,8 +141,12 @@ html,body{
     display:flex;
     flex-direction:column;
     padding:16px;
-    background:rgba(230,235,245,.92);
+    background:rgba(230,235,245,.94);
     backdrop-filter:blur(6px);
+}
+
+.overlay-header{
+    margin-bottom:10px;
 }
 
 .overlay-title{

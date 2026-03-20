@@ -11,7 +11,21 @@
 
   "signals": [
     { "name": "defaultBtnWidth", "value": 138 },
-    { "name": "defaultBtnHeight", "value": 34 }
+    { "name": "defaultBtnHeight", "value": 34 },
+
+    {
+      "name": "pbiSelection",
+      "on": [
+        {
+          "events": "@btnHit:click",
+          "update": "pbiCrossFilterApply(event.item.datum)"
+        },
+        {
+          "events": "view:dblclick",
+          "update": "pbiCrossFilterClear()"
+        }
+      ]
+    }
   ],
 
   "data": [
@@ -140,6 +154,28 @@
         },
         "hover": {
           "fontSize": { "value": 13.5 }
+        }
+      }
+    },
+
+    {
+      "name": "btnHit",
+      "type": "rect",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.labelx * width" },
+          "y": { "signal": "datum.labely * height" },
+          "width": { "signal": "defaultBtnWidth" },
+          "height": { "signal": "defaultBtnHeight" },
+          "fill": { "value": "white" },
+          "fillOpacity": { "value": 0.001 },
+          "cursor": { "value": "pointer" }
+        },
+        "update": {
+          "tooltip": {
+            "signal": "{'Botón': datum.Boton, 'Detalle': datum.tooltip, 'Mapa': datum.nombreMapa}"
+          }
         }
       }
     }

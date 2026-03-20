@@ -1,113 +1,377 @@
-Pantalla Equipos HTML = 
-VAR ImagenUrl =
-    SELECTEDVALUE ( Mapas[Url] )
+Pantalla HTML = 
+VAR MostrarTabla = [Mostrar Tabla] 
+-- 0 = mostrar mapa/imagen
+-- 1 = mostrar overlay con tabla
 
-VAR NombreMapa =
-    SELECTEDVALUE ( Mapas[Seccion], "Secciòn" )
+VAR BreadcrumbTxt =
+    "Inicio > Departamento > Secundario > MAKER > VE"
 
-VAR NombreTecnologia =
-    SELECTEDVALUE ( Mapas[Tecnologia], "Tecnología" )
+VAR ImagenMaquina =
+    SELECTEDVALUE ( Maquina[UrlImagen] )
+    -- reemplazar por tu campo/medida real
 
-VAR NombreDepartamento =
-    SELECTEDVALUE ( Mapas[Departamento], "Tecnología" )
+VAR TotalRelacionados =
+    [Total Documentos Relacionados]
+    -- reemplazar por tu medida real
 
-VAR NombreEquipo =
-    SELECTEDVALUE ( Mapas[Equipo], "Equipo" )
+VAR DocsRelacionadosHtml =
+    [HTML Documentacion Relacionada]
+    -- reemplazar por tu medida html del panel derecho
 
-VAR TecnologiasHtml =
-    CONCATENATEX (
-        FILTER (
-            ALL ( Mapas[Mapa] ),
-            NOT ISBLANK ( Mapas[Mapa] )
-        ),
-        "<div class='tech-item " &
-            IF ( Mapas[Mapa] = NombreMapa, "active", "" ) &
-        "'>📘 " & Mapas[Mapa] & " <span>›</span></div>",
-        "",
-        Mapas[Mapa], ASC
+VAR TablaResultadosHtml =
+    [Tabla Documentos HTML]
+    -- tu medida actual de tabla
+
+VAR BotonVolverHtml =
+    "<div class='back-btn'>" &
+        "<span class='back-icon'>←</span>" &
+        "<span>Volver al mapa</span>" &
+    "</div>"
+
+VAR MapaHtml =
+    IF (
+        NOT ISBLANK ( ImagenMaquina ),
+        "<div class='machine-stage'>" &
+            "<img class='machine-image' src='" & ImagenMaquina & "' />" &
+            "<div class='machine-overlay-hint'>Seleccioná una zona del mapa para ver resultados</div>" &
+        "</div>",
+        "<div class='machine-empty'>No hay imagen de máquina disponible</div>"
     )
 
-VAR HtmlInicio =
-    "<div class='app'>" &
-    "<style>" &
-    "*{box-sizing:border-box;}" &
-    ".app{width:100%;height:100%;font-family:Segoe UI, Arial, sans-serif;background:linear-gradient(180deg,#33457a 0px,#213d61 74px,#1d456c 74px,#1d456c 100%);color:#fff;overflow:hidden;}" &
-    ".topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#d9e4ff;font-size:13px;border-bottom:1px solid rgba(120,170,255,.18);background:rgba(255,255,255,.04);}" &
-    ".brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.2px;}" &
-    ".brand-mark{width:34px;height:34px;background:linear-gradient(135deg,#8bd6ff,#3a7bd5);clip-path:polygon(0 0,100% 18%,55% 100%,15% 62%);border-radius:4px;box-shadow:0 0 20px rgba(93,190,255,.22);}" &
-    ".layout{display:grid;grid-template-columns:190px 1fr 260px;height:calc(100% - 74px);min-height:0;}" &
-    ".leftbar{background:linear-gradient(180deg,rgba(12,30,52,.45),rgba(14,34,58,.72));border-right:1px solid rgba(142,191,255,.10);padding:14px 10px;overflow:auto;}" &
-    ".search{height:38px;border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#c8d9f0;background:rgba(255,255,255,.05);border:1px solid rgba(150,200,255,.08);margin-bottom:14px;font-size:13px;}" &
-    ".side-title{background:#1d7285;color:#dffbff;font-size:12px;font-weight:700;border-radius:4px;padding:10px 12px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}" &
-    ".nav-item{color:#d7e4f7;padding:10px 12px;border-radius:6px;font-size:14px;margin-bottom:4px;background:transparent;}" &
-    ".nav-item.active{background:rgba(60,153,175,.30);border-left:3px solid #58d6ff;padding-left:9px;}" &
-    ".nav-sub{margin-left:14px;color:#b8d4ee;font-size:13px;padding:7px 10px;border-left:2px solid rgba(106,201,255,.25);margin-bottom:4px;}" &
-    ".main{padding:16px;min-width:0;overflow:hidden;}" &
-    ".crumbs{color:#d1def1;font-size:13px;margin-bottom:10px;opacity:.9;}" &
-    ".content-card{background:rgba(255,255,255,.82);border-radius:12px;overflow:hidden;height:calc(100% - 28px);min-height:560px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:grid;grid-template-rows:56px 1fr;}" &
-    ".card-head{display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid rgba(36,58,88,.08);color:#41546d;font-weight:700;font-size:18px;background:rgba(255,255,255,.65);}" &
-    ".map-area{position:relative;min-height:0;padding:14px;background:linear-gradient(180deg,#eef3fb,#e3edf9);}" &
-    ".map-shell{position:relative;width:100%;height:100%;border-radius:8px;overflow:hidden;background:linear-gradient(180deg,#dce8f7,#cfdcf1);box-shadow:inset 0 0 0 1px rgba(88,123,170,.12);}" &
-    ".machine-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;z-index:1;}" &
-    ".overlay-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;}" &
-    ".hotspot{position:absolute;z-index:3;min-width:96px;height:32px;padding:0 14px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:linear-gradient(180deg,#4f9bf3,#2f6ec8);border:2px solid rgba(143,223,255,.85);box-shadow:0 6px 16px rgba(0,0,0,.20);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;}" &
-    ".hotspot span{overflow:hidden;text-overflow:ellipsis;}" &
-    ".rightbar{padding:16px 14px 16px 0;}" &
-    ".right-card{height:100%;min-height:620px;background:rgba(255,255,255,.82);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px;color:#4a5b72;overflow:auto;}" &
-    ".section-title{font-weight:700;color:#596c84;margin:6px 0 10px 0;}" &
-    ".tech-item{display:flex;align-items:center;justify-content:space-between;min-height:38px;padding:0 12px;border-radius:8px;background:#f2f4f8;margin-bottom:8px;font-size:14px;color:#5a6d84;border:1px solid rgba(80,102,130,.08);}" &
-    ".tech-item.active{background:linear-gradient(180deg,#61a8ea,#4a8fd6);color:#fff;box-shadow:0 6px 14px rgba(67,127,201,.25);}" &
-    ".doc-item{display:grid;grid-template-columns:1fr 28px;align-items:center;min-height:34px;padding:0 10px;border-bottom:1px solid rgba(80,102,130,.10);color:#62758c;font-size:14px;}" &
-    ".doc-btn{margin-top:12px;height:36px;border-radius:8px;border:none;width:100%;background:linear-gradient(180deg,#5f84bb,#486eaa);color:#fff;font-weight:600;font-size:13px;}" &
-    "</style>"
+VAR HtmlStyles =
+"
+<style>
+*{box-sizing:border-box;}
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    font-family:'Segoe UI',Arial,sans-serif;
+}
+.screen{
+    width:100%;
+    height:100%;
+    display:grid;
+    grid-template-rows:92px 1fr;
+    background:
+        linear-gradient(180deg,#0f4d86 0%, #1e5f99 18%, #cfd8e6 100%);
+    color:#24364a;
+    overflow:hidden;
+}
+
+/* HEADER */
+.topbar{
+    display:grid;
+    grid-template-rows:34px 1fr;
+    gap:8px;
+    padding:14px 18px 10px 18px;
+    border-bottom:1px solid rgba(255,255,255,.18);
+}
+.topbar-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-width:0;
+}
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:.2px;
+}
+.brand-badge{
+    width:26px;
+    height:26px;
+    border-radius:8px;
+    background:linear-gradient(180deg,#7fd0ff,#3f89d4);
+    box-shadow:0 8px 20px rgba(20,70,130,.30);
+}
+.breadcrumb{
+    color:rgba(255,255,255,.92);
+    font-size:13px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-left:18px;
+}
+.filter-slots{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:12px;
+    min-height:0;
+}
+.filter-slot{
+    height:100%;
+    min-height:44px;
+    border-radius:14px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    color:rgba(255,255,255,.90);
+    font-size:13px;
+    font-weight:700;
+}
+.filter-slot span{
+    opacity:.92;
+}
+
+/* MAIN */
+.main{
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0,4fr) 280px;
+    gap:14px;
+    padding:14px 18px 18px 18px;
+}
+.canvas-panel{
+    min-height:0;
+    position:relative;
+    border-radius:22px;
+    overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+    border:1px solid rgba(255,255,255,.24);
+    box-shadow:0 16px 36px rgba(18,45,82,.18);
+    backdrop-filter:blur(4px);
+}
+.machine-stage{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+}
+.machine-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+.machine-overlay-hint{
+    position:absolute;
+    left:18px;
+    bottom:16px;
+    padding:10px 14px;
+    border-radius:12px;
+    background:rgba(15,33,60,.48);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    backdrop-filter:blur(5px);
+}
+.machine-empty{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+}
+
+/* OVERLAY RESULTADOS */
+.results-overlay{
+    position:absolute;
+    inset:0;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    background:linear-gradient(180deg, rgba(225,233,243,.72), rgba(213,223,236,.84));
+    backdrop-filter:blur(7px);
+}
+.back-btn{
+    align-self:flex-start;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    min-height:42px;
+    padding:0 18px;
+    border-radius:12px;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    background:linear-gradient(180deg,#355a86,#24486f);
+    box-shadow:0 10px 24px rgba(33,70,115,.22);
+}
+.back-icon{
+    font-size:18px;
+    line-height:1;
+}
+.results-card{
+    flex:1 1 auto;
+    min-height:0;
+    border-radius:18px;
+    overflow:hidden;
+    background:rgba(255,255,255,.66);
+    border:1px solid rgba(255,255,255,.42);
+    box-shadow:0 12px 28px rgba(18,45,82,.10);
+}
+
+/* SIDEBAR */
+.sidebar{
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:16px 14px;
+    border-radius:22px;
+    overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.74), rgba(246,249,253,.82));
+    border:1px solid rgba(255,255,255,.44);
+    box-shadow:0 16px 36px rgba(18,45,82,.14);
+}
+.sidebar-section{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    min-height:0;
+}
+.sidebar-title{
+    font-size:14px;
+    font-weight:800;
+    color:#506176;
+}
+.counter-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:56px;
+    padding:0 14px;
+    border-radius:14px;
+    background:linear-gradient(180deg,#edf2f8,#e5ebf4);
+    border:1px solid rgba(190,202,220,.45);
+}
+.counter-label{
+    font-size:13px;
+    color:#66778c;
+    font-weight:700;
+}
+.counter-value{
+    font-size:26px;
+    color:#284a72;
+    font-weight:800;
+}
+.related-wrap{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+.related-list{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:auto;
+    padding-right:2px;
+}
+.related-list::-webkit-scrollbar{width:7px;}
+.related-list::-webkit-scrollbar-thumb{
+    background:rgba(83,107,141,.25);
+    border-radius:8px;
+}
+.related-item{
+    display:grid;
+    grid-template-columns:1fr 28px;
+    align-items:center;
+    gap:10px;
+    min-height:42px;
+    margin-bottom:8px;
+    padding:0 12px;
+    border-radius:12px;
+    background:#fff;
+    border:1px solid rgba(217,225,236,.85);
+    color:#53657b;
+    font-size:13px;
+    font-weight:600;
+}
+.related-count{
+    text-align:right;
+    color:#2c4d73;
+    font-weight:800;
+}
+.sidebar-footer{
+    padding-top:6px;
+    font-size:13px;
+    color:#66778c;
+    font-weight:700;
+}
+
+/* ayuda visual para ubicar slicers encima */
+.slot-note{
+    font-size:11px;
+    font-weight:600;
+    opacity:.82;
+    margin-left:auto;
+}
+</style>
+"
 
 VAR HtmlHeader =
     "<div class='topbar'>" &
-        "<div class='brand'>" &
-            "<div class='brand-mark'></div>" &
-            "<div>TÉCNICO<br/>MANUFACTURA</div>" &
-        "</div>" &
-        "<div>Departamento &gt; "& NombreDepartamento &" &gt; "& NombreEquipo &" &gt; " & NombreMapa & "</div>" &
-    "</div>"
-
-VAR HtmlLeft =
-    "<div class='leftbar'>" &
-    "</div>"
-
-VAR HtmlMain =
-    "<div class='main'>" &
-        "<div class='crumbs'>🏠 Inicio &gt; Departamento &gt; "& NombreDepartamento &" &gt; "& NombreEquipo &" &gt; " & NombreMapa & "</div>" &
-        "<div class='content-card'>" &
-            "<div class='card-head'>" &
-                "<div>" & NombreMapa & "</div>" &
-                
-            "</div>" &
-            "<div class='map-area'>" &
-                
+        "<div class='topbar-row'>" &
+            "<div style='display:flex;align-items:center;min-width:0;'>" &
+                "<div class='brand'>" &
+                    "<div class='brand-badge'></div>" &
+                    "<div>TÉCNICO MANUFACTURA</div>" &
+                "</div>" &
+                "<div class='breadcrumb'>" & BreadcrumbTxt & "</div>" &
             "</div>" &
         "</div>" &
-    "</div>"
-
-VAR HtmlRight =
-    "<div class='rightbar'>" &
-        "<div class='right-card'>" &
-            
+        "<div class='filter-slots'>" &
+            "<div class='filter-slot'><span>LINKUP</span><span class='slot-note'>slicer nativo</span></div>" &
+            "<div class='filter-slot'><span>TAREAS</span><span class='slot-note'>slicer nativo</span></div>" &
+            "<div class='filter-slot'><span>PÉRDIDA</span><span class='slot-note'>slicer nativo</span></div>" &
+            "<div class='filter-slot'><span>TECNOLOGÍA</span><span class='slot-note'>slicer nativo</span></div>" &
         "</div>" &
     "</div>"
 
-VAR HtmlFinal =
-    HtmlInicio &
-    HtmlHeader &
-    "<div class='layout'>" &
-        HtmlLeft &
-        HtmlMain &
-        HtmlRight &
-    "</div>" &
+VAR HtmlSidebar =
+    "<div class='sidebar'>" &
+        "<div class='sidebar-section'>" &
+            "<div class='sidebar-title'>Documentación relacionada</div>" &
+            "<div class='counter-card'>" &
+                "<div class='counter-label'>Total documentos</div>" &
+                "<div class='counter-value'>" & FORMAT ( TotalRelacionados, "#,0" ) & "</div>" &
+            "</div>" &
+        "</div>" &
+        "<div class='sidebar-section related-wrap'>" &
+            "<div class='related-list'>" &
+                DocsRelacionadosHtml &
+            "</div>" &
+        "</div>" &
+        "<div class='sidebar-footer'>Explorá la máquina o aplicá filtros múltiples arriba.</div>" &
+    "</div>"
+
+VAR HtmlCanvas =
+    "<div class='canvas-panel'>" &
+        MapaHtml &
+        IF (
+            MostrarTabla = 1,
+            "<div class='results-overlay'>" &
+                BotonVolverHtml &
+                "<div class='results-card'>" &
+                    TablaResultadosHtml &
+                "</div>" &
+            "</div>",
+            ""
+        ) &
     "</div>"
 
 RETURN
-IF (
-    ISBLANK ( ImagenUrl ),
-    "<div style='padding:20px;font-family:Segoe UI'>Seleccioná un mapa</div>",
-    HtmlFinal
-)
+    HtmlStyles &
+    "<div class='screen'>" &
+        HtmlHeader &
+        "<div class='main'>" &
+            HtmlCanvas &
+            HtmlSidebar &
+        "</div>" &
+    "</div>"

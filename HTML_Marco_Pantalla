@@ -46,73 +46,118 @@ html,body{
     width:100%;
     height:100%;
     display:grid;
-    grid-template-rows:96px 1fr;
+    grid-template-rows:60px 1fr;
     background:linear-gradient(180deg,#0f4d86 0%, #1f5f99 30%, #dbe3ef 100%);
     overflow:hidden;
 }
 
-/* HEADER */
+/* HEADER (MÁS CHICO) */
 .header{
     display:flex;
     flex-direction:column;
     justify-content:center;
-    padding:10px 14px 8px 14px;
-    gap:8px;
+    padding:6px 12px;
+    gap:4px;
 }
 
 .breadcrumb{
     color:#ffffff;
-    font-size:13px;
+    font-size:12px;
     font-weight:600;
-    padding:0 4px;
 }
 
 .filters-band{
     width:100%;
-    min-height:50px;
-    border-radius:14px;
+    height:36px;
+    border-radius:12px;
     background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:12px;
-    padding:8px 10px;
+    gap:8px;
+    padding:4px 6px;
 }
 
 .filter-slot{
     height:100%;
-    min-height:34px;
-    border-radius:10px;
+    border-radius:8px;
     background:rgba(255,255,255,.10);
     display:flex;
     align-items:center;
-    padding:0 12px;
+    padding:0 8px;
     color:#ffffff;
-    font-weight:700;
-    font-size:12px;
-    letter-spacing:.2px;
-    white-space:nowrap;
+    font-weight:600;
+    font-size:11px;
 }
 
 /* MAIN */
 .main{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 290px;
-    gap:12px;
-    padding:12px;
-    min-height:0;
+    position:relative;
+    padding:10px;
+    height:100%;
 }
 
-/* CANVAS */
+/* CANVAS FULL */
 .canvas{
-    position:relative;
-    border-radius:18px;
+    position:absolute;
+    inset:0;
+    border-radius:16px;
     overflow:hidden;
-    background:rgba(255,255,255,.16);
-    border:1px solid rgba(255,255,255,.18);
-    box-shadow:0 10px 24px rgba(13,41,79,.10);
+    background:rgba(255,255,255,.15);
+}
+
+/* SIDEBAR ARRIBA DERECHA */
+.sidebar{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:260px;
+    max-height:55%;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.95);
+    border:1px solid rgba(220,228,238,.95);
+    box-shadow:0 10px 24px rgba(13,41,79,.12);
+    z-index:3;
+}
+
+.sidebar-title{
+    font-size:14px;
+    font-weight:700;
+    color:#31445c;
+}
+
+.counter-box{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 10px;
+    border-radius:10px;
+    background:#eef3f9;
+}
+
+.counter{
+    font-size:22px;
+    font-weight:800;
+    color:#284a72;
+}
+
+.related-frame{
+    flex:1;
     min-height:0;
+    border-radius:12px;
+    background:#f8fbff;
+    padding:8px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.related{
+    flex:1;
+    overflow:auto;
 }
 
 /* OVERLAY */
@@ -124,105 +169,7 @@ html,body{
     padding:16px;
     background:rgba(240,245,252,.88);
     backdrop-filter:blur(6px);
-}
-
-.overlay-header{
-    display:flex;
-    flex-direction:column;
-    margin-bottom:10px;
-}
-
-.overlay-title{
-    font-size:16px;
-    font-weight:700;
-    color:#2f3f57;
-}
-
-.overlay-hint{
-    font-size:12px;
-    color:#6b7a90;
-}
-
-.overlay-body{
-    flex:1;
-    min-height:0;
-}
-
-/* SIDEBAR */
-.sidebar{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    padding:12px;
-    border-radius:18px;
-    background:rgba(255,255,255,.92);
-    border:1px solid rgba(220,228,238,.95);
-    box-shadow:0 10px 24px rgba(13,41,79,.08);
-    min-height:0;
-}
-
-.sidebar-title{
-    font-size:15px;
-    font-weight:700;
-    color:#31445c;
-}
-
-.counter-box{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:10px 12px;
-    border-radius:12px;
-    background:linear-gradient(180deg,#f4f7fb,#e9eef6);
-    border:1px solid #dde5f0;
-}
-
-.counter-label{
-    font-size:12px;
-    font-weight:600;
-    color:#6a7a8f;
-}
-
-.counter{
-    font-size:26px;
-    font-weight:800;
-    color:#284a72;
-    line-height:1;
-}
-
-.related-frame{
-    flex:1;
-    min-height:0;
-    border-radius:14px;
-    border:1px solid #d9e2ee;
-    background:#f8fbff;
-    padding:10px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    overflow:hidden;
-}
-
-.related-title{
-    font-size:13px;
-    font-weight:700;
-    color:#51647d;
-}
-
-.related{
-    flex:1;
-    min-height:0;
-    overflow:auto;
-    padding-right:2px;
-}
-
-.related::-webkit-scrollbar{
-    width:7px;
-}
-
-.related::-webkit-scrollbar-thumb{
-    background:rgba(83,107,141,.25);
-    border-radius:8px;
+    z-index:2;
 }
 </style>
 "
@@ -246,19 +193,18 @@ VAR HtmlMain =
         "<div class='sidebar'>" &
             "<div class='sidebar-title'>Documentación relacionada</div>" &
             "<div class='counter-box'>" &
-                "<div class='counter-label'>Total documentos</div>" &
-                "<div class='counter'>" & FORMAT ( TotalRelacionados, "#,0" ) & "</div>" &
+                "<div>Total</div>" &
+                "<div class='counter'>" & TotalRelacionados & "</div>" &
             "</div>" &
             "<div class='related-frame'>" &
-                "<div class='related-title'>Listado</div>" &
                 "<div class='related'>" & DocsRelacionadosHtml & "</div>" &
             "</div>" &
         "</div>" &
     "</div>"
 
 RETURN
-    HtmlStyles &
-    "<div class='screen'>" &
-        HtmlHeader &
-        HtmlMain &
-    "</div>"
+HtmlStyles &
+"<div class='screen'>" &
+    HtmlHeader &
+    HtmlMain &
+"</div>"

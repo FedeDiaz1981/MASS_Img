@@ -1,0 +1,147 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Hotspots transparentes sobre imagen de fondo",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "padding": 0,
+  "background": null,
+
+  "signals": [
+    { "name": "defaultBtnWidth", "value": 138 },
+    { "name": "defaultBtnHeight", "value": 34 }
+  ],
+
+  "data": [
+    {
+      "name": "dataset"
+    },
+    {
+      "name": "botones",
+      "source": "dataset",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum.Boton) && datum.Boton != '' && isValid(datum.labelx) && isValid(datum.labely) && isValid(datum.pointx) && isValid(datum.pointy)"
+        },
+        {
+          "type": "collect",
+          "sort": {
+            "field": "order",
+            "order": "ascending"
+          }
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rule",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.labelx * width + defaultBtnWidth / 2" },
+          "y": { "signal": "datum.labely * height + defaultBtnHeight / 2" },
+          "x2": { "signal": "datum.pointx * width" },
+          "y2": { "signal": "datum.pointy * height" },
+          "stroke": { "value": "#58B9FF" },
+          "strokeWidth": { "value": 2.2 },
+          "strokeOpacity": { "value": 0.95 }
+        },
+        "hover": {
+          "strokeWidth": { "value": 3 }
+        }
+      }
+    },
+
+    {
+      "type": "symbol",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.pointx * width" },
+          "y": { "signal": "datum.pointy * height" },
+          "size": { "value": 95 },
+          "fill": { "value": "#A8E7FF" },
+          "fillOpacity": { "value": 0.95 },
+          "stroke": { "value": "#3FAEFF" },
+          "strokeWidth": { "value": 2.2 }
+        },
+        "hover": {
+          "size": { "value": 130 },
+          "strokeWidth": { "value": 3 }
+        }
+      }
+    },
+
+    {
+      "type": "rect",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.labelx * width + 3" },
+          "y": { "signal": "datum.labely * height + 4" },
+          "width": { "signal": "defaultBtnWidth" },
+          "height": { "signal": "defaultBtnHeight" },
+          "fill": { "value": "black" },
+          "fillOpacity": { "value": 0.18 },
+          "cornerRadius": { "value": 11 }
+        }
+      }
+    },
+
+    {
+      "type": "rect",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.labelx * width" },
+          "y": { "signal": "datum.labely * height" },
+          "width": { "signal": "defaultBtnWidth" },
+          "height": { "signal": "defaultBtnHeight" },
+          "fill": { "value": "#1F7AE0" },
+          "fillOpacity": { "value": 0.82 },
+          "stroke": { "value": "#86D8FF" },
+          "strokeWidth": { "value": 2 },
+          "cornerRadius": { "value": 11 },
+          "cursor": { "value": "pointer" }
+        },
+        "update": {
+          "tooltip": {
+            "signal": "{'Botón': datum.Boton, 'Detalle': datum.tooltip, 'Mapa': datum.nombreMapa}"
+          }
+        },
+        "hover": {
+          "fill": { "value": "#2A8CFF" },
+          "fillOpacity": { "value": 0.95 },
+          "strokeWidth": { "value": 2.8 }
+        }
+      }
+    },
+
+    {
+      "type": "text",
+      "from": { "data": "botones" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "datum.labelx * width + defaultBtnWidth / 2" },
+          "y": { "signal": "datum.labely * height + defaultBtnHeight / 2" },
+          "text": { "field": "Boton" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "fill": { "value": "white" },
+          "fontSize": { "value": 13 },
+          "fontWeight": { "value": "bold" },
+          "limit": { "signal": "defaultBtnWidth - 20" },
+          "ellipsis": { "value": "..." }
+        },
+        "hover": {
+          "fontSize": { "value": 13.5 }
+        }
+      }
+    }
+  ]
+}

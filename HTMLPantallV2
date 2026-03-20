@@ -1,237 +1,137 @@
-Tabla Documentos HTML = 
-VAR DocsUnicos =
-    SUMMARIZE (
-        FILTER (
-            Documentos_Url,
-            NOT ISBLANK ( Documentos_Url[Name] )
-        ),
-        Documentos_Url[ID],
-        Documentos_Url[Name],
-        Documentos_Url[Date modified],
-        Documentos_Url[Folder Path]
-    )
-
-VAR DocsOrdenados =
-    TOPN (
-        100000,
-        DocsUnicos,
-        [Date modified], DESC,
-        [Name], ASC
-    )
-
-VAR TotalDocs =
-    COUNTROWS ( DocsOrdenados )
-
-VAR FilasHtml =
-    CONCATENATEX (
-        DocsOrdenados,
-        "<div class='doc-row'>" &
-            "<div class='doc-id'>" & [ID] & "</div>" &
-            "<div class='doc-name'>" &
-                "<span class='doc-icon'>📄</span>" &
-                "<span class='doc-text' title='" & [Name] & "'>" & [Name] & "</span>" &
-            "</div>" &
-            "<div class='doc-date'>" &
-                FORMAT ( [Date modified], "dd/MM/yyyy HH:mm" ) &
-            "</div>" &
-            "<div class='doc-action'>" &
-                "<a class='doc-icon-btn' href='#' target='_blank' title='Descargar'>↓</a>" &
-                "<a class='doc-validate-btn' href='#' target='_blank'>Validar</a>" &
-            "</div>" &
-        "</div>",
-        ""
-    )
-
 VAR HtmlStyles =
-    "<style>" &
-        "*{box-sizing:border-box;margin:0;padding:0;}" &
+"
+<style>
+*{box-sizing:border-box;}
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    font-family:Segoe UI, Arial;
+}
 
-        ".docs-wrap{" &
-            "width:100%;height:100%;" &
-            "font-family:Segoe UI, Arial, sans-serif;" &
-            "border-radius:18px;" &
-            "overflow:hidden;" &
-            "color:#314056;" &
-            "background:rgba(255,255,255,.78);" &
-            "backdrop-filter:blur(8px);" &
-            "border:1px solid rgba(255,255,255,.45);" &
-            "box-shadow:0 10px 30px rgba(15,35,70,.10);" &
-            "display:flex;flex-direction:column;" &
-        "}" &
+/* BACKGROUND GENERAL */
+.screen{
+    width:100%;
+    height:100%;
+    display:grid;
+    grid-template-rows:70px 1fr;
+    background:linear-gradient(180deg,#1F3D7A,#2F5EB8 35%,#E6E6E6);
+    overflow:hidden;
+}
 
-        ".docs-header{" &
-            "display:grid;" &
-            "grid-template-columns:80px minmax(0,1.6fr) 190px 150px;" &
-            "align-items:center;" &
-            "min-height:46px;" &
-            "padding:0 16px;" &
-            "font-size:12px;" &
-            "letter-spacing:.2px;" &
-            "color:#6b7a90;" &
-            "background:rgba(245,248,252,.92);" &
-            "border-bottom:1px solid rgba(120,140,170,.16);" &
-            "font-weight:700;" &
-            "position:sticky;" &
-            "top:0;" &
-            "z-index:2;" &
-        "}" &
+/* HEADER */
+.header{
+    display:flex;
+    flex-direction:column;
+    padding:10px 16px;
+    gap:6px;
+}
 
-        ".docs-body{" &
-            "flex:1 1 auto;" &
-            "overflow-y:auto;" &
-            "overflow-x:hidden;" &
-            "background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(246,248,252,.88));" &
-        "}" &
+.breadcrumb{
+    color:#FFFFFF;
+    font-size:13px;
+    font-weight:600;
+    opacity:.9;
+}
 
-        ".docs-body::-webkit-scrollbar{width:8px;}" &
-        ".docs-body::-webkit-scrollbar-thumb{" &
-            "background:rgba(86,108,145,.25);" &
-            "border-radius:8px;" &
-        "}" &
+/* SLICERS AREA */
+.filters{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
 
-        ".doc-row{" &
-            "display:grid;" &
-            "grid-template-columns:80px minmax(0,1.6fr) 190px 150px;" &
-            "align-items:center;" &
-            "padding:12px 16px;" &
-            "border-bottom:1px solid rgba(120,140,170,.10);" &
-            "column-gap:14px;" &
-            "transition:background .18s ease;" &
-        "}" &
+.filter-slot{
+    height:38px;
+    border-radius:10px;
+    background:rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    padding-left:10px;
+    color:white;
+    font-weight:600;
+    font-size:12px;
+    backdrop-filter:blur(6px);
+}
 
-        ".doc-row:nth-child(even){" &
-            "background:rgba(248,250,253,.72);" &
-        "}" &
+/* MAIN */
+.main{
+    display:grid;
+    grid-template-columns:1fr 300px;
+    gap:14px;
+    padding:14px;
+    min-height:0;
+}
 
-        ".doc-row:hover{" &
-            "background:rgba(230,240,252,.42);" &
-        "}" &
+/* CANVAS */
+.canvas{
+    position:relative;
+    border-radius:18px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#f4f7fb,#e9eef6);
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
 
-        ".doc-id{" &
-            "color:#617089;" &
-            "font-size:12px;" &
-            "font-weight:700;" &
-            "line-height:1.3;" &
-            "word-break:break-word;" &
-        "}" &
+/* OVERLAY RESULTADOS */
+.overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    padding:18px;
+    background:rgba(230,235,245,.92);
+    backdrop-filter:blur(6px);
+}
 
-        ".doc-name{" &
-            "display:flex;" &
-            "align-items:flex-start;" &
-            "gap:10px;" &
-            "min-width:0;" &
-            "font-size:13px;" &
-            "font-weight:600;" &
-            "color:#2f3f57;" &
-        "}" &
+.overlay-title{
+    font-size:16px;
+    font-weight:700;
+    color:#1F3D7A;
+}
 
-        ".doc-icon{" &
-            "font-size:16px;" &
-            "line-height:1.2;" &
-            "opacity:.85;" &
-            "flex:0 0 auto;" &
-        "}" &
+.overlay-hint{
+    font-size:12px;
+    color:#3A3A3A;
+}
 
-        ".doc-text{" &
-            "display:block;" &
-            "line-height:1.35;" &
-            "word-break:break-word;" &
-        "}" &
+/* SIDEBAR */
+.sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:14px;
+    border-radius:18px;
+    background:#FFFFFF;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
 
-        ".doc-date{" &
-            "color:#66748b;" &
-            "font-size:13px;" &
-            "font-weight:500;" &
-            "white-space:nowrap;" &
-        "}" &
+/* TITULO SIDEBAR */
+.sidebar b{
+    color:#1F3D7A;
+}
 
-        ".doc-action{" &
-            "display:flex;" &
-            "justify-content:flex-end;" &
-            "align-items:center;" &
-            "gap:8px;" &
-        "}" &
+/* CONTADOR */
+.counter{
+    font-size:28px;
+    font-weight:800;
+    color:#2F5EB8;
+}
 
-        ".doc-icon-btn{" &
-            "display:flex;" &
-            "align-items:center;" &
-            "justify-content:center;" &
-            "width:34px;height:34px;" &
-            "border-radius:10px;" &
-            "text-decoration:none;" &
-            "color:#fff;" &
-            "font-size:15px;" &
-            "font-weight:700;" &
-            "background:linear-gradient(180deg,#5f9df2,#3f78c9);" &
-            "box-shadow:0 6px 14px rgba(63,120,201,.22);" &
-        "}" &
+/* LISTA */
+.related{
+    flex:1;
+    overflow:auto;
+}
 
-        ".doc-validate-btn{" &
-            "display:flex;" &
-            "align-items:center;" &
-            "justify-content:center;" &
-            "min-width:92px;height:34px;" &
-            "padding:0 14px;" &
-            "border-radius:10px;" &
-            "text-decoration:none;" &
-            "color:#fff;" &
-            "font-weight:700;" &
-            "font-size:12px;" &
-            "letter-spacing:.2px;" &
-            "background:linear-gradient(180deg,#95507a,#74355c);" &
-            "box-shadow:0 6px 14px rgba(116,53,92,.20);" &
-        "}" &
+/* SCROLL */
+.related::-webkit-scrollbar{
+    width:8px;
+}
 
-        ".doc-footer{" &
-            "display:flex;" &
-            "justify-content:space-between;" &
-            "align-items:center;" &
-            "min-height:42px;" &
-            "padding:0 16px;" &
-            "font-size:12px;" &
-            "color:#66748b;" &
-            "background:rgba(245,248,252,.92);" &
-            "border-top:1px solid rgba(120,140,170,.12);" &
-        "}" &
-
-        ".docs-empty{" &
-            "width:100%;height:100%;" &
-            "display:flex;" &
-            "align-items:center;" &
-            "justify-content:center;" &
-            "padding:24px;" &
-            "text-align:center;" &
-            "font-size:14px;" &
-            "font-weight:600;" &
-            "color:#6b7a90;" &
-            "background:rgba(255,255,255,.78);" &
-            "border-radius:18px;" &
-            "border:1px solid rgba(255,255,255,.45);" &
-            "box-shadow:0 10px 30px rgba(15,35,70,.10);" &
-        "}" &
-    "</style>"
-
-VAR HtmlEmpty =
-    HtmlStyles &
-    "<div class='docs-empty'>No hay documentos para los filtros seleccionados</div>"
-
-VAR HtmlFull =
-    HtmlStyles &
-    "<div class='docs-wrap'>" &
-        "<div class='docs-header'>" &
-            "<div>ID</div>" &
-            "<div>Nombre</div>" &
-            "<div>Última modificación</div>" &
-            "<div style='text-align:right;'>Acciones</div>" &
-        "</div>" &
-        "<div class='docs-body'>" &
-            FilasHtml &
-        "</div>" &
-        "<div class='doc-footer'>" &
-            "<div>Total de documentos: " & TotalDocs & "</div>" &
-            "<div>Scroll para navegar</div>" &
-        "</div>" &
-    "</div>"
-
-RETURN
-    IF ( TotalDocs = 0, HtmlEmpty, HtmlFull )
+.related::-webkit-scrollbar-thumb{
+    background:#4C7BE8;
+    border-radius:10px;
+}
+</style>
+"

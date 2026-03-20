@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Hotspots transparentes sobre imagen de fondo",
+  "description": "Hotspots visuales sobre imagen de fondo, sin interacción de click",
   "autosize": {
     "type": "fit",
     "contains": "padding",
@@ -11,21 +11,7 @@
 
   "signals": [
     { "name": "defaultBtnWidth", "value": 138 },
-    { "name": "defaultBtnHeight", "value": 34 },
-
-    {
-      "name": "pbiSelection",
-      "on": [
-        {
-          "events": "@btnHit:click",
-          "update": "pbiCrossFilterApply(event.item.datum)"
-        },
-        {
-          "events": "view:dblclick",
-          "update": "pbiCrossFilterClear()"
-        }
-      ]
-    }
+    { "name": "defaultBtnHeight", "value": 34 }
   ],
 
   "data": [
@@ -121,7 +107,7 @@
           "stroke": { "value": "#86D8FF" },
           "strokeWidth": { "value": 2 },
           "cornerRadius": { "value": 11 },
-          "cursor": { "value": "pointer" }
+          "cursor": { "value": "default" }
         },
         "update": {
           "tooltip": {
@@ -154,28 +140,6 @@
         },
         "hover": {
           "fontSize": { "value": 13.5 }
-        }
-      }
-    },
-
-    {
-      "name": "btnHit",
-      "type": "rect",
-      "from": { "data": "botones" },
-      "encode": {
-        "enter": {
-          "x": { "signal": "datum.labelx * width" },
-          "y": { "signal": "datum.labely * height" },
-          "width": { "signal": "defaultBtnWidth" },
-          "height": { "signal": "defaultBtnHeight" },
-          "fill": { "value": "white" },
-          "fillOpacity": { "value": 0.001 },
-          "cursor": { "value": "pointer" }
-        },
-        "update": {
-          "tooltip": {
-            "signal": "{'Botón': datum.Boton, 'Detalle': datum.tooltip, 'Mapa': datum.nombreMapa}"
-          }
         }
       }
     }

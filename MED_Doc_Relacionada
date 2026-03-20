@@ -1,0 +1,32 @@
+HTML Documentacion Relacionada =
+VAR TiposConConteo =
+    ADDCOLUMNS (
+        FILTER (
+            VALUES ( 'Tipo documento'[Name] ),
+            NOT ISBLANK ( 'Tipo documento'[Name] )
+        ),
+        "CantDocs",
+            CALCULATE (
+                DISTINCTCOUNT ( Documentos_Url[ID] )
+            )
+    )
+
+VAR TiposVisibles =
+    FILTER ( TiposConConteo, [CantDocs] > 0 )
+
+VAR HtmlItems =
+    CONCATENATEX (
+        TiposVisibles,
+        "<div class='related-item'>" &
+            "<div>" & 'Tipo documento'[Name] & "</div>" &
+            "<div class='related-count'>" & [CantDocs] & "</div>" &
+        "</div>",
+        ""
+    )
+
+RETURN
+    IF (
+        COUNTROWS ( TiposVisibles ) = 0,
+        "<div class='related-item'><div>Sin documentación</div><div class='related-count'>0</div></div>",
+        HtmlItems
+    )

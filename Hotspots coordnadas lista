@@ -1,0 +1,83 @@
+Stamper Valor Fiscal
+pointx: 0.22
+pointy: 0.34
+labelx: 0.19
+labely: 0.30
+
+Grupo baja de Marquilla
+pointx: 0.36
+pointy: 0.22
+labelx: 0.33
+labely: 0.18
+
+Grupo Bajada de Aluminio
+pointx: 0.52
+pointy: 0.28
+labelx: 0.49
+labely: 0.24
+
+Tolva de cigarrillos
+pointx: 0.78
+pointy: 0.34
+labelx: 0.75
+labely: 0.30
+
+Grupo Inyector de Cigarrillos
+pointx: 0.78
+pointy: 0.52
+labelx: 0.75
+labely: 0.48
+
+Cadena de Molde
+pointx: 0.92
+pointy: 0.60
+labelx: 0.89
+labely: 0.56
+
+Empty Vanes
+pointx: 0.78
+pointy: 0.78
+labelx: 0.75
+labely: 0.74
+
+Mando manual
+pointx: 0.50
+pointy: 0.72
+labelx: 0.47
+labely: 0.68
+
+5ta Rueda
+pointx: 0.12
+pointy: 0.48
+labelx: 0.09
+labely: 0.44
+
+Canal de Secado
+pointx: 0.28
+pointy: 0.42
+labelx: 0.25
+labely: 0.38
+
+4ta Rueda
+pointx: 0.38
+pointy: 0.50
+labelx: 0.35
+labely: 0.46
+
+3ra Rueda
+pointx: 0.48
+pointy: 0.50
+labelx: 0.45
+labely: 0.46
+
+2da Rueda
+pointx: 0.58
+pointy: 0.50
+labelx: 0.55
+labely: 0.46
+
+1er Rueda
+pointx: 0.68
+pointy: 0.52
+labelx: 0.65
+labely: 0.48

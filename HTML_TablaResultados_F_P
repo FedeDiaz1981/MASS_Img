@@ -34,10 +34,17 @@ VAR FilasHtml =
             "<div class='doc-date'>" &
                 FORMAT ( [Date modified], "dd/MM/yyyy HH:mm" ) &
             "</div>" &
-            "<div class='doc-action'>" &
-                "<a class='doc-icon-btn' href='" & Documentos_Url[Url] & "' target='_blank' title='Abrir'>Abrir</a>" &
-                "<a class='doc-validate-btn hide' href='#' target='_blank'>Validar</a>" &
-            "</div>" &
+			"<div class='doc-action'>" &
+				"<a class='doc-icon-btn' href='" & Documentos_Url[Url] & "' target='_blank' title='Abrir'>Abrir</a>" &
+				"<a class='doc-validate-btn " &
+					IF(
+						[Attributes.FormatoDeArchivo.Value] = "OPL" ||
+						[Attributes.FormatoDeArchivo.Value] = "TI",
+						"",
+						"hide"
+					)
+				& "' href='#' target='_blank'>Validar</a>" &
+			"</div>" &
         "</div>",
         ""
     )

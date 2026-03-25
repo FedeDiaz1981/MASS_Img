@@ -1,3 +1,5 @@
+X1
+
 Stamper Valor Fiscal
 pointx: 0.22
 pointy: 0.34
@@ -81,3 +83,110 @@ pointx: 0.68
 pointy: 0.52
 labelx: 0.65
 labely: 0.48
+
+
+X2
+Grupo baja de Marquilla
+pointx: 0.08
+pointy: 0.36
+labelx: 0.05
+labely: 0.32
+
+8va Rueda
+pointx: 0.36
+pointy: 0.20
+labelx: 0.33
+labely: 0.16
+
+Canal de Secado
+pointx: 0.44
+pointy: 0.20
+labelx: 0.41
+labely: 0.16
+
+7ma Rueda
+pointx: 0.36
+pointy: 0.34
+labelx: 0.33
+labely: 0.30
+
+6ta Rueda
+pointx: 0.38
+pointy: 0.42
+labelx: 0.35
+labely: 0.38
+
+5ta Rueda
+pointx: 0.46
+pointy: 0.42
+labelx: 0.43
+labely: 0.38
+
+4ta Rueda
+pointx: 0.42
+pointy: 0.52
+labelx: 0.39
+labely: 0.48
+
+3ra Rueda
+pointx: 0.50
+pointy: 0.52
+labelx: 0.47
+labely: 0.48
+
+2da Rueda
+pointx: 0.58
+pointy: 0.46
+labelx: 0.55
+labely: 0.42
+
+1er Rueda
+pointx: 0.66
+pointy: 0.52
+labelx: 0.63
+labely: 0.48
+
+Grupo Bajada de Aluminio
+pointx: 0.58
+pointy: 0.30
+labelx: 0.55
+labely: 0.26
+
+Tolva de cigarrillos
+pointx: 0.82
+pointy: 0.34
+labelx: 0.79
+labely: 0.30
+
+Grupo Inyector de Cigarrillos
+pointx: 0.82
+pointy: 0.52
+labelx: 0.79
+labely: 0.48
+
+Cadena de Molde
+pointx: 0.90
+pointy: 0.62
+labelx: 0.87
+labely: 0.58
+
+Empty Vanes
+pointx: 0.80
+pointy: 0.76
+labelx: 0.77
+labely: 0.72
+
+Mando manual
+pointx: 0.56
+pointy: 0.68
+labelx: 0.53
+labely: 0.64
+
+Grupo de bobinas (SMART / PRF1)
+pointx: 0.40
+pointy: 0.64
+labelx: 0.37
+labely: 0.60
+
+
+X3

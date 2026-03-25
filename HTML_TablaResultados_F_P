@@ -1,0 +1,239 @@
+Tabla Documentos HTML = 
+VAR DocsUnicos =
+    SUMMARIZE (
+        FILTER (
+            Documentos_Url,
+            NOT ISBLANK ( Documentos_Url[Name] )
+        ),
+        Documentos_Url[ID],
+        Documentos_Url[Name],
+        Documentos_Url[Date modified],
+        Documentos_Url[Url]
+    )
+
+VAR DocsOrdenados =
+    TOPN (
+        100000,
+        DocsUnicos,
+        [Date modified], DESC,
+        [Name], ASC
+    )
+
+VAR TotalDocs =
+    COUNTROWS ( DocsOrdenados )
+
+VAR FilasHtml =
+    CONCATENATEX (
+        DocsOrdenados,
+        "<div class='doc-row'>" &
+            "<div class='doc-id'>" & [ID] & "</div>" &
+            "<div class='doc-name'>" &
+                "<span class='doc-icon'>📄</span>" &
+                "<span class='doc-text' title='" & [Name] & "'>" & [Name] & "</span>" &
+            "</div>" &
+            "<div class='doc-date'>" &
+                FORMAT ( [Date modified], "dd/MM/yyyy HH:mm" ) &
+            "</div>" &
+            "<div class='doc-action'>" &
+                "<a class='doc-icon-btn' href='" & Documentos_Url[Url] & "' target='_blank' title='Abrir'>Abrir</a>" &
+                "<a class='doc-validate-btn hide' href='#' target='_blank'>Validar</a>" &
+            "</div>" &
+        "</div>",
+        ""
+    )
+
+VAR HtmlStyles =
+    "<style>" &
+        "*{box-sizing:border-box;margin:0;padding:0;}" &
+
+        ".docs-wrap{" &
+            "width:100%;height:100%;" &
+            "font-family:Segoe UI, Arial, sans-serif;" &
+            "border-radius:16px;" &
+            "overflow:hidden;" &
+            "color:#314056;" &
+            "background:#ffffff;" &
+            "border:1px solid #dfe6f0;" &
+            "box-shadow:0 8px 24px rgba(13,41,79,.08);" &
+            "display:flex;flex-direction:column;" &
+        "}" &
+
+        ".docs-header{" &
+            "display:grid;" &
+            "grid-template-columns:80px minmax(0,1.6fr) 190px 150px;" &
+            "align-items:center;" &
+            "min-height:44px;" &
+            "padding:0 16px;" &
+            "font-size:12px;" &
+            "letter-spacing:.2px;" &
+            "color:#5f7086;" &
+            "background:#f3f6fa;" &
+            "border-bottom:1px solid #e1e8f1;" &
+            "font-weight:700;" &
+            "position:sticky;" &
+            "top:0;" &
+            "z-index:2;" &
+        "}" &
+
+        ".docs-body{" &
+            "flex:1 1 auto;" &
+            "overflow-y:auto;" &
+            "overflow-x:hidden;" &
+            "background:#ffffff;" &
+        "}" &
+
+        ".docs-body::-webkit-scrollbar{width:8px;}" &
+        ".docs-body::-webkit-scrollbar-thumb{" &
+            "background:rgba(86,108,145,.22);" &
+            "border-radius:8px;" &
+        "}" &
+
+        ".doc-row{" &
+            "display:grid;" &
+            "grid-template-columns:80px minmax(0,1.6fr) 190px 150px;" &
+            "align-items:center;" &
+            "padding:11px 16px;" &
+            "border-bottom:1px solid #edf1f6;" &
+            "column-gap:14px;" &
+            "transition:background .18s ease;" &
+            "background:#ffffff;" &
+        "}" &
+
+        ".doc-row:nth-child(even){" &
+            "background:#f8fbff;" &
+        "}" &
+
+        ".doc-row:hover{" &
+            "background:#eef4fb;" &
+        "}" &
+
+        ".doc-id{" &
+            "color:#617089;" &
+            "font-size:12px;" &
+            "font-weight:700;" &
+            "line-height:1.3;" &
+            "word-break:break-word;" &
+        "}" &
+
+        ".doc-name{" &
+            "display:flex;" &
+            "align-items:flex-start;" &
+            "gap:10px;" &
+            "min-width:0;" &
+            "font-size:13px;" &
+            "font-weight:600;" &
+            "color:#2f3f57;" &
+        "}" &
+
+        ".doc-icon{" &
+            "font-size:16px;" &
+            "line-height:1.2;" &
+            "opacity:.85;" &
+            "flex:0 0 auto;" &
+        "}" &
+
+        ".doc-text{" &
+            "display:block;" &
+            "line-height:1.35;" &
+            "word-break:break-word;" &
+        "}" &
+
+        ".doc-date{" &
+            "color:#66748b;" &
+            "font-size:12px;" &
+            "font-weight:500;" &
+            "white-space:nowrap;" &
+        "}" &
+
+        ".doc-action{" &
+            "display:flex;" &
+            "justify-content:flex-end;" &
+            "align-items:center;" &
+            "gap:8px;" &
+        "}" &
+
+        ".doc-icon-btn{" &
+            "display:flex;" &
+            "align-items:center;" &
+            "justify-content:center;" &
+            "width:88px;height:32px;" &
+            "border-radius:8px;" &
+            "text-decoration:none;" &
+            "color:#fff;" &
+            "font-size:14px;" &
+            "font-weight:700;" &
+            "background:linear-gradient(180deg,#5f9df2,#3f78c9);" &
+            "box-shadow:0 4px 10px rgba(63,120,201,.18);" &
+        "}" &
+
+        ".doc-validate-btn{" &
+            "display:flex;" &
+            "align-items:center;" &
+            "justify-content:center;" &
+            "min-width:88px;height:32px;" &
+            "padding:0 12px;" &
+            "border-radius:8px;" &
+            "text-decoration:none;" &
+            "color:#fff;" &
+            "font-weight:700;" &
+            "font-size:12px;" &
+            "letter-spacing:.1px;" &
+            "background:linear-gradient(180deg,#95507a,#74355c);" &
+            "box-shadow:0 4px 10px rgba(116,53,92,.16);" &
+        "}" &
+
+        ".doc-footer{" &
+            "display:flex;" &
+            "justify-content:space-between;" &
+            "align-items:center;" &
+            "min-height:40px;" &
+            "padding:0 16px;" &
+            "font-size:12px;" &
+            "color:#66748b;" &
+            "background:#f3f6fa;" &
+            "border-top:1px solid #e1e8f1;" &
+        "}" &
+
+        ".docs-empty{" &
+            "width:100%;height:100%;" &
+            "display:flex;" &
+            "align-items:center;" &
+            "justify-content:center;" &
+            "padding:24px;" &
+            "text-align:center;" &
+            "font-size:14px;" &
+            "font-weight:600;" &
+            "color:#6b7a90;" &
+            "background:#ffffff;" &
+            "border-radius:16px;" &
+            "border:1px solid #dfe6f0;" &
+            "box-shadow:0 8px 24px rgba(13,41,79,.08);" &
+        "}" &
+
+        ".hide{ display: none !important }" &
+    "</style>"
+
+VAR HtmlEmpty =
+    HtmlStyles &
+    "<div class='docs-empty'>No hay documentos para los filtros seleccionados</div>"
+
+VAR HtmlFull =
+    HtmlStyles &
+    "<div class='docs-wrap'>" &
+        "<div class='docs-header'>" &
+            "<div>ID</div>" &
+            "<div>Nombre</div>" &
+            "<div>Última modificación</div>" &
+            "<div style='text-align:right;'>Acciones</div>" &
+        "</div>" &
+        "<div class='docs-body'>" &
+            FilasHtml &
+        "</div>" &
+        "<div class='doc-footer'>" &
+            "<div>Total de documentos: " & TotalDocs & "</div>" &
+            "<div>Scroll para navegar</div>" &
+        "</div>" &
+    "</div>"
+
+RETURN
+    IF ( TotalDocs = 0, HtmlEmpty, HtmlFull )

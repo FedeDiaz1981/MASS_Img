@@ -1,0 +1,9 @@
+Tecnologia seleccionada =
+VAR Tec =
+    SELECTEDVALUE ( Tecnologia[Title] )
+RETURN
+IF (
+    NOT ISBLANK ( Tec ),
+    "Tecnología: " & Tec,
+    "Tecnología: Todas"
+)

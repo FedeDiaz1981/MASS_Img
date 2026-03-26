@@ -10,8 +10,11 @@
   "background": null,
 
   "signals": [
-    { "name": "defaultBtnWidth", "value": 138 },
-    { "name": "defaultBtnHeight", "value": 34 }
+    { "name": "defaultBtnHeight", "value": 34 },
+    { "name": "minBtnWidth", "value": 110 },
+    { "name": "maxBtnWidth", "value": 260 },
+    { "name": "charWidth", "value": 7.4 },
+    { "name": "horizontalPadding", "value": 28 }
   ],
 
   "data": [
@@ -25,6 +28,11 @@
         {
           "type": "filter",
           "expr": "isValid(datum.Boton) && datum.Boton != '' && isValid(datum.labelx) && isValid(datum.labely) && isValid(datum.pointx) && isValid(datum.pointy)"
+        },
+        {
+          "type": "formula",
+          "as": "btnWidth",
+          "expr": "clamp(length(datum.Boton) * charWidth + horizontalPadding, minBtnWidth, maxBtnWidth)"
         },
         {
           "type": "collect",
@@ -43,7 +51,7 @@
       "from": { "data": "botones" },
       "encode": {
         "enter": {
-          "x": { "signal": "datum.labelx * width + defaultBtnWidth / 2" },
+          "x": { "signal": "datum.labelx * width + datum.btnWidth / 2" },
           "y": { "signal": "datum.labely * height + defaultBtnHeight / 2" },
           "x2": { "signal": "datum.pointx * width" },
           "y2": { "signal": "datum.pointy * height" },
@@ -84,7 +92,7 @@
         "enter": {
           "x": { "signal": "datum.labelx * width + 3" },
           "y": { "signal": "datum.labely * height + 4" },
-          "width": { "signal": "defaultBtnWidth" },
+          "width": { "field": "btnWidth" },
           "height": { "signal": "defaultBtnHeight" },
           "fill": { "value": "black" },
           "fillOpacity": { "value": 0.18 },
@@ -100,7 +108,7 @@
         "enter": {
           "x": { "signal": "datum.labelx * width" },
           "y": { "signal": "datum.labely * height" },
-          "width": { "signal": "defaultBtnWidth" },
+          "width": { "field": "btnWidth" },
           "height": { "signal": "defaultBtnHeight" },
           "fill": { "value": "#1F7AE0" },
           "fillOpacity": { "value": 0.82 },
@@ -127,7 +135,7 @@
       "from": { "data": "botones" },
       "encode": {
         "enter": {
-          "x": { "signal": "datum.labelx * width + defaultBtnWidth / 2" },
+          "x": { "signal": "datum.labelx * width + datum.btnWidth / 2" },
           "y": { "signal": "datum.labely * height + defaultBtnHeight / 2" },
           "text": { "field": "Boton" },
           "align": { "value": "center" },
@@ -135,8 +143,7 @@
           "fill": { "value": "white" },
           "fontSize": { "value": 13 },
           "fontWeight": { "value": "bold" },
-          "limit": { "signal": "defaultBtnWidth - 20" },
-          "ellipsis": { "value": "..." }
+          "limit": { "signal": "datum.btnWidth - 20" }
         },
         "hover": {
           "fontSize": { "value": 13.5 }

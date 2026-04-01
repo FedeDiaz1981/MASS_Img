@@ -1,127 +1,151 @@
 {
-  "sections": [
-    {
-      "displayname": "",
-      "fields": []
-    }
-  ],
-  "customRowAction": {},
-  "hideSelection": true,
-  "hideCommandBar": true,
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/view-formatting.schema.json",
+  "viewProps": {
+    "hideSelection": true
+  },
   "formatter": {
     "elmType": "div",
     "style": {
-      "max-width": "700px",
-      "margin": "0 auto",
-      "padding": "24px",
-      "border-radius": "12px",
-      "box-shadow": "0 4px 12px rgba(0,0,0,0.08)",
-      "background-color": "#ffffff",
-      "font-family": "Segoe UI"
+      "display": "flex",
+      "flex-wrap": "wrap",
+      "gap": "16px",
+      "padding": "12px"
     },
     "children": [
       {
         "elmType": "div",
+        "forEach": "row in @rows",
         "style": {
-          "margin-bottom": "20px"
+          "width": "380px",
+          "background-color": "#ffffff",
+          "border": "1px solid #edebe9",
+          "border-radius": "14px",
+          "box-shadow": "0 2px 8px rgba(0,0,0,0.08)",
+          "padding": "18px",
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "14px"
         },
         "children": [
           {
             "elmType": "div",
-            "txtContent": "Confirmación de lectura",
             "style": {
-              "font-size": "20px",
-              "font-weight": "600",
-              "margin-bottom": "8px"
-            }
+              "display": "flex",
+              "justify-content": "space-between",
+              "align-items": "center",
+              "padding-bottom": "8px",
+              "border-bottom": "1px solid #f3f2f1"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "style": {
+                  "font-size": "18px",
+                  "font-weight": "600",
+                  "color": "#323130"
+                },
+                "txtContent": "Confirmación de lectura"
+              }
+            ]
           },
           {
             "elmType": "div",
-            "txtContent": "Por favor confirmá que leíste el siguiente documento",
             "style": {
-              "color": "#666666",
-              "font-size": "13px"
-            }
-          }
-        ]
-      },
-      {
-        "elmType": "div",
-        "style": {
-          "background-color": "#f3f2f1",
-          "padding": "16px",
-          "border-radius": "8px",
-          "margin-bottom": "20px"
-        },
-        "children": [
-          {
-            "elmType": "div",
-            "txtContent": "Documento ID",
-            "style": {
-              "font-size": "12px",
-              "color": "#605e5c"
-            }
+              "display": "grid",
+              "grid-template-columns": "140px 1fr",
+              "row-gap": "10px",
+              "column-gap": "12px",
+              "align-items": "start"
+            },
+            "children": [
+              {
+                "elmType": "div",
+                "txtContent": "ID",
+                "style": {
+                  "font-size": "12px",
+                  "font-weight": "600",
+                  "color": "#605e5c",
+                  "text-transform": "uppercase",
+                  "letter-spacing": "0.3px"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "[$row.ID]",
+                "style": {
+                  "font-size": "15px",
+                  "font-weight": "600",
+                  "color": "#323130"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "Formato de archivo",
+                "style": {
+                  "font-size": "12px",
+                  "font-weight": "600",
+                  "color": "#605e5c",
+                  "text-transform": "uppercase",
+                  "letter-spacing": "0.3px"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "[$row.FormatodeArchivo]",
+                "style": {
+                  "font-size": "15px",
+                  "color": "#323130"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "Versión",
+                "style": {
+                  "font-size": "12px",
+                  "font-weight": "600",
+                  "color": "#605e5c",
+                  "text-transform": "uppercase",
+                  "letter-spacing": "0.3px"
+                }
+              },
+              {
+                "elmType": "div",
+                "txtContent": "[$row.Version]",
+                "style": {
+                  "font-size": "15px",
+                  "color": "#323130"
+                }
+              }
+            ]
           },
           {
             "elmType": "div",
-            "txtContent": "[$DocId]",
             "style": {
-              "font-size": "16px",
-              "font-weight": "600",
-              "margin-bottom": "10px"
-            }
-          },
-          {
-            "elmType": "div",
-            "txtContent": "Documento",
-            "style": {
-              "font-size": "12px",
-              "color": "#605e5c"
-            }
-          },
-          {
-            "elmType": "div",
-            "txtContent": "[$Documento]",
-            "style": {
-              "font-size": "15px"
-            }
-          }
-        ]
-      },
-      {
-        "elmType": "div",
-        "style": {
-          "margin-bottom": "16px"
-        },
-        "children": [
-          {
-            "elmType": "div",
-            "txtContent": "Confirmación",
-            "style": {
-              "font-weight": "600",
-              "margin-bottom": "6px"
-            }
-          },
-          {
-            "elmType": "div",
-            "fieldRenderer": "Confirmacion"
-          }
-        ]
-      },
-      {
-        "elmType": "div",
-        "children": [
-          {
-            "elmType": "div",
-            "txtContent": "Comentarios",
-            "style": {
-              "font-weight": "600",
-              "margin-bottom": "6px"
-            }
-          },
-          {
-            "elmType": "div",
-            "fieldRenderer": "Comentarios"
+              "display": "flex",
+              "justify-content": "flex-end",
+              "padding-top": "10px",
+              "border-top": "1px solid #f3f2f1"
+            },
+            "children": [
+              {
+                "elmType": "button",
+                "txtContent": "Aceptar",
+                "customRowAction": {
+                  "action": "executeFlow",
+                  "actionParams": "{\"id\":\"FLOW_ID_AQUI\"}"
+                },
+                "style": {
+                  "background-color": "#0078d4",
+                  "color": "#ffffff",
+                  "border": "none",
+                  "border-radius": "10px",
+                  "padding": "10px 18px",
+                  "font-size": "14px",
+                  "font-weight": "600",
+                  "cursor": "pointer"
+                }
+              }
+            ]
           }
         ]
       }
